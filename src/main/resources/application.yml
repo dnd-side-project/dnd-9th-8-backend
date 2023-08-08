@@ -22,10 +22,10 @@ spring:
 
   sql.init.mode:
 
-# debugging log disable
+### debugging log disable ###
 debug:
 
-# actuator enable
+### actuator enable ###
 management.endpoints.web.exposure.include:
 
 logging:
@@ -33,3 +33,21 @@ logging:
     site.packit.packit:
     org.springframework.web.servlet:
     org.hibernate.type.descriptor.sql.BasicBinder:
+
+### Custom App Setting ###
+app:
+  ### JWT ###
+  jwt:
+    secret:
+      access-token-secret-key:
+      refresh-token-secret-key:
+    expiry:
+      access-token-expiry:
+      refresh-token-expiry:
+
+  ### Cookie ###
+  cookie:
+    oauth2-authorization-request-cookie-name:
+    redirect-uri-param-cookie-name:
+    refresh-token-cookie-name:
+    cookie-expire-seconds:
