@@ -1,0 +1,35 @@
+server:
+  port:
+
+spring:
+  profiles:
+    default: dev
+
+  datasource:
+    url:
+    username:
+    password:
+    driver-class-name:
+
+  jpa:
+    hibernate.ddl-auto:
+    show-sql:
+    properties:
+      hibernate.format_sql:
+      hibernate.default_batch_fetch_size:
+    open-in-view: false
+    defer-datasource-initialization:
+
+  sql.init.mode:
+
+# debugging log disable
+debug:
+
+# actuator enable
+management.endpoints.web.exposure.include:
+
+logging:
+  level:
+    site.packit.packit:
+    org.springframework.web.servlet:
+    org.hibernate.type.descriptor.sql.BasicBinder:
