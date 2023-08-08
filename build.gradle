@@ -35,8 +35,11 @@ dependencies {
     // MySQL
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    // Util
+    // Actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
