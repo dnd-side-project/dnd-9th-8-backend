@@ -35,13 +35,25 @@ dependencies {
     // MySQL
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    // OAuth2 Client
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    // JWT
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+
     // Actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     // Gson
     implementation 'com.google.code.gson:gson:2.10.1'
 
-    // Test
+    // Spring Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
