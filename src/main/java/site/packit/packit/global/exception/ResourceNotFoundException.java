@@ -1,17 +1,17 @@
 package site.packit.packit.global.exception;
 
-public abstract class ResourceNotFoundException
+public class ResourceNotFoundException
         extends RuntimeException {
     private final ErrorCode errorCode;
 
-    protected ResourceNotFoundException(
+    public ResourceNotFoundException(
             final ErrorCode errorCode
     ) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
 
-    protected ResourceNotFoundException(
+    public ResourceNotFoundException(
             final ErrorCode errorCode,
             Throwable cause
     ) {
