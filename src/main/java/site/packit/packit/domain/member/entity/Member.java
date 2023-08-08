@@ -36,7 +36,7 @@ public class Member
     private String profileImageUrl;
 
     @Column(columnDefinition = "INT UNSIGNED", nullable = false)
-    private Integer listCheckLimit;
+    private Integer listCheckLimitCount;
 
     @Column(length = 50, nullable = false)
     private MemberStatus status = ACTIVE;
@@ -52,7 +52,7 @@ public class Member
             String email,
             String nickname,
             String profileImageUrl,
-            Integer listCheckLimit,
+            Integer listCheckLimitCount,
             MemberRole role,
             AuthenticationProvider authenticationProvider
     ) {
@@ -60,7 +60,7 @@ public class Member
         this.email = email;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
-        this.listCheckLimit = listCheckLimit;
+        this.listCheckLimitCount = listCheckLimitCount;
         this.role = role;
         this.authenticationProvider = authenticationProvider;
     }
