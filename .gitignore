@@ -179,4 +179,7 @@ gradle-app.setting
 # dev
 src/main/resources/application-dev.yml
 
+### Dev File
+src/main/java/site/packit/packit/dev/**
+
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,intellij+all,macos
