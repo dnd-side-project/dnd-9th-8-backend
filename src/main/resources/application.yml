@@ -34,8 +34,21 @@ spring:
           redirectUri:
           scope:
           clientName:
+        naver:
+          clientId:
+          clientSecret:
+          clientAuthenticationMethod:
+          authorizationGrantType:
+          redirectUri:
+          scope:
+          clientName:
       provider:
         kakao:
+          authorizationUri:
+          tokenUri:
+          userInfoUri:
+          userNameAttribute:
+        naver:
           authorizationUri:
           tokenUri:
           userInfoUri:
