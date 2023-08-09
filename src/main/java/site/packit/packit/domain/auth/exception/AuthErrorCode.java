@@ -23,6 +23,15 @@ public enum AuthErrorCode
     LOGGED_OUT_TOKEN("AT-C-0007", UNAUTHORIZED, "로그아웃된 토큰입니다."),
 
     /**
+     * OAuth2
+     * 1000 ~ 1999
+     */
+    LOGIN_PROVIDER_MISMATCH("AT-C-1000", BAD_REQUEST, "잘못된 OAuth2 인증입니다."),
+    INVALID_AUTHENTICATION_PROVIDER("AT-C-1001", BAD_REQUEST, "유효하지 않은 로그인 제공자입니다."),
+    INVALID_REDIRECT_URI("AT-C-1002", UNAUTHORIZED, "허용되지 않은 리다이렉션 URI 입니다."),
+    INVALID_MEMBER_ROLE("AT-C-1003", FORBIDDEN, "유효하지 않은 사용자 권한입니다."),
+
+    /**
      * Common Exception
      * 9000 ~ 9999
      */
