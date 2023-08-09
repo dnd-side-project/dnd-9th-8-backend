@@ -24,7 +24,7 @@ public class TokenAuthenticationFilter
 
     private static final String EXCEPTION_ATTRIBUTE_NAME = "exceptionCode";
 
-    private static final String TOKEN_REISSUE_REQUEST_URI = "/api/v1/auth/refresh";
+    private static final String TOKEN_REISSUE_REQUEST_URI = "/api/auth/refresh";
 
     public TokenAuthenticationFilter(
             AuthTokenProvider authTokenProvider,
