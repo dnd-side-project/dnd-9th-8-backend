@@ -1,30 +1,39 @@
 package site.packit.packit.domain.auth.token;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.GrantedAuthority;
+import site.packit.packit.domain.auth.exception.TokenException;
+import site.packit.packit.domain.auth.repository.RefreshTokenRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Collection;
 import java.util.Date;
 
-public class AuthTokenProvider {
+import static site.packit.packit.domain.auth.exception.AuthErrorCode.INVALID_TOKEN;
+import static site.packit.packit.domain.auth.exception.AuthErrorCode.LOGGED_OUT_TOKEN;
 
+public class AuthTokenProvider {
     private final Key accessTokenSecretKey;
     private final long accessTokenExpiry;
     private final Key refreshTokenSecretKey;
     private final long refreshTokenExpiry;
+    private final RefreshTokenRepository refreshTokenRepository;
+
 
     public AuthTokenProvider(
             String accessTokenSecretKeyString,
             long accessTokenExpiry,
             String refreshTokenSecretKeyString,
-            long refreshTokenExpiry
+            long refreshTokenExpiry,
+            RefreshTokenRepository refreshTokenRepository
     ) {
         this.accessTokenSecretKey = generateTokenKey(accessTokenSecretKeyString);
         this.accessTokenExpiry = accessTokenExpiry;
         this.refreshTokenSecretKey = generateTokenKey(refreshTokenSecretKeyString);
         this.refreshTokenExpiry = refreshTokenExpiry;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     // token key 문자열을 Key Object 로 변환
@@ -81,5 +90,22 @@ public class AuthTokenProvider {
      */
     public AuthToken createAuthTokenOfRefreshToken(String refreshToken) {
         return AuthToken.of(refreshToken, refreshTokenSecretKey);
+    }
+
+    /**
+     * Token 유효성 검증
+     */
+    public void tokenValidate(AuthToken token) {
+        Claims tokenClaims = token.getTokenClaims();
+        if (tokenClaims == null)
+            throw new TokenException(INVALID_TOKEN);
+    }
+
+    /**
+     * 로그아웃된 토큰인지 체크
+     */
+    public void checkLogoutToken(AuthToken authToken) {
+        if (!refreshTokenRepository.existsByMemberPersonalId(authToken.getTokenClaims().getSubject()))
+            throw new TokenException(LOGGED_OUT_TOKEN);
     }
 }
