@@ -11,4 +11,8 @@ public interface RefreshTokenRepository
     Optional<RefreshToken> findByMemberPersonalId(String memberPersonalId);
 
     boolean existsByMemberPersonalId(String personalId);
+
+    Optional<RefreshToken> findByMemberPersonalIdAndValue(String personalId, String value);
+
+    void deleteAllByMemberPersonalId(String personalId);
 }
