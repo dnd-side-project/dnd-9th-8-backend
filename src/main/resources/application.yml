@@ -17,10 +17,29 @@ spring:
     properties:
       hibernate.format_sql:
       hibernate.default_batch_fetch_size:
-    open-in-view: false
+    open-in-view:
     defer-datasource-initialization:
 
   sql.init.mode:
+
+  ### OAuth2 ###
+  security:
+    oauth2.client:
+      registration:
+        kakao:
+          clientId:
+          clientSecret:
+          clientAuthenticationMethod:
+          authorizationGrantType:
+          redirectUri:
+          scope:
+          clientName:
+      provider:
+        kakao:
+          authorizationUri:
+          tokenUri:
+          userInfoUri:
+          userNameAttribute:
 
 ### debugging log disable ###
 debug:
@@ -51,3 +70,8 @@ app:
     redirect-uri-param-cookie-name:
     refresh-token-cookie-name:
     cookie-expire-seconds:
+
+  ### OAuth2 ###
+  oauth2:
+    authorized-redirect-uris:
+    cookie-max-age:
