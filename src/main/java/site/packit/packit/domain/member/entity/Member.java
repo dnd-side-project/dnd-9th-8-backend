@@ -38,12 +38,15 @@ public class Member
     @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private Integer listCheckLimitCount;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 50, nullable = false)
     private MemberStatus status = ACTIVE;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 50, nullable = false)
     private MemberRole role;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 50, nullable = false, updatable = false)
     private AuthenticationProvider authenticationProvider;
 
