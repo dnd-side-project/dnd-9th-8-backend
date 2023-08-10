@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    default: dev
+    default: prod
 
   datasource:
     url:
