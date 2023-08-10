@@ -44,6 +44,10 @@ public class SecurityConfig {
             Map.of(
                     "URL", "/docs/**",
                     "METHOD", GET.name()
+            ),
+            Map.of(
+                    "URL", "/api/dev-free",
+                    "METHOD", GET.name()
             )
     );
 
