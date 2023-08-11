@@ -1,9 +1,11 @@
 package site.packit.packit.domain.travel.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.packit.packit.domain.member.entity.Member;
 import site.packit.packit.domain.travel.constant.DestinationType;
 import site.packit.packit.domain.travel.constant.TravelStatus;
 import site.packit.packit.global.audit.BaseEntity;
@@ -44,4 +46,8 @@ public class Travel
     @Column(length = 1000, nullable = false)
     private String iconUrl;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    @JsonIgnore
+    private Member member;
 }
