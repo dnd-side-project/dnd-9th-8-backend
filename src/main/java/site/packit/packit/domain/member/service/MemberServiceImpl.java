@@ -1,7 +1,5 @@
 package site.packit.packit.domain.member.service;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import site.packit.packit.domain.member.dto.CreateMemberDto;
 import site.packit.packit.domain.member.dto.MemberDto;
@@ -22,47 +20,43 @@ public class MemberServiceImpl
     }
 
     @Override
-    public void createMember(CreateMemberDto request) {
-        memberRepository.save(request.toEntity());
-    }
-
-    @Override
-    public Member getMemberEntityByPersonalId(String personalId) {
-        return memberRepository.findByPersonalId(personalId)
-                .orElseThrow(() -> new ResourceNotFoundException(MEMBER_NOT_FOUND));
-    }
-
-    @Override
-    public Member getAuthorizedMember() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return getMemberEntityByPersonalId(authentication.getName());
+    public Long createMember(CreateMemberDto request) {
+        return memberRepository.save(request.toEntity()).getId();
     }
 
     @Override
     public MemberDto getMember(Long memberId) {
         return MemberDto.from(
-                memberRepository.findById(memberId)
-                        .orElseThrow(() -> new ResourceNotFoundException(MEMBER_NOT_FOUND))
+                getMemberEntity(memberId)
         );
     }
 
     @Override
     public void updateMemberNickname(
+            Long memberId,
             String newNickname
     ) {
-        Member member = getAuthorizedMember();
-        member.updateNickname(newNickname);
+        Member savedMember = getMemberEntity(memberId);
+        savedMember.updateNickname(newNickname);
     }
 
     @Override
-    public void updateMemberProfileImageUrl(String newProfileImageUrl) {
-        Member member = getAuthorizedMember();
-        member.updateProfileImageUrl(newProfileImageUrl);
+    public void updateMemberProfileImageUrl(
+            Long memberId,
+            String newProfileImageUrl
+    ) {
+        Member savedMember = getMemberEntity(memberId);
+        savedMember.updateProfileImageUrl(newProfileImageUrl);
     }
 
     @Override
-    public void deleteMember() {
-        Member member = getAuthorizedMember();
-        memberRepository.delete(member);
+    public void deleteMember(Long memberId) {
+        Member savedMember = getMemberEntity(memberId);
+        memberRepository.delete(savedMember);
+    }
+
+    private Member getMemberEntity(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new ResourceNotFoundException(MEMBER_NOT_FOUND));
     }
 }
