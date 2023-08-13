@@ -70,5 +70,21 @@ public class ItemController {
         );
     }
 
+    /**
+     * 체크리스트 아이템 체크/체크 취소
+     */
+    @PatchMapping(value = "travels/{travelId}/check-lists/{checkListId}/items/{itemId}")
+    public ResponseEntity<SuccessApiResponse> checkItem(
+            @PathVariable Long travelId, @PathVariable Long checkListId, @PathVariable Long itemId
+    ){
+        itemService.checkItem(travelId, checkListId, itemId);
+
+        return ResponseEntity.ok(
+                SuccessApiResponse.of(
+                        "아이템 체크&체크 취소가 완료되었습니다."
+                )
+        );
+    }
+
 
 }

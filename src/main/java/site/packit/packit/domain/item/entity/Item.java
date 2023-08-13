@@ -53,5 +53,12 @@ public class Item
         this.listOrder = listOrder;
     }
 
+    public void setChecked(Boolean checked) {
+        this.isChecked = checked;
+    }
+
+    public void toggleChecked() {
+        this.isChecked = !this.isChecked;
+    }
 
 }

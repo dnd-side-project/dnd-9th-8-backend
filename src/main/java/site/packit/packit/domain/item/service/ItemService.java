@@ -123,4 +123,24 @@ public class ItemService {
         // 아이템 삭제
         itemRepository.delete(deletedItem);
     }
+
+
+    /**
+     * 체크리스트 아이템 체크/체크 취소
+     */
+    @Transactional
+    public void checkItem(Long travelId, Long checkListId, Long itemId) {
+
+        Travel travel = travelRepository.findById(travelId)
+                .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+        CheckList checkList = checkListRepository.findById(checkListId)
+                .orElseThrow(() -> new ResourceNotFoundException(CHECKLIST_NOT_FOUND));
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException(ITEM_NOT_FOUND));
+
+        // 아이템의 isChecked 속성 변경
+        item.toggleChecked();
+
+        itemRepository.save(item);
+    }
 }
