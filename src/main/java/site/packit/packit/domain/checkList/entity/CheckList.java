@@ -43,7 +43,9 @@ public class CheckList
         this.travel = travel;
     }
 
-    public void setListOrder(Integer listOrder) {
+    public void setListOrder(
+            Integer listOrder
+    ) {
         this.listOrder = listOrder;
     }
 }

@@ -3,9 +3,14 @@ package site.packit.packit.domain.item.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import site.packit.packit.domain.checkList.dto.UpdateCheckListRequest;
 import site.packit.packit.domain.item.dto.CreateItemRequest;
+import site.packit.packit.domain.item.dto.UpdateItemRequest;
 import site.packit.packit.domain.item.service.ItemService;
 import site.packit.packit.global.response.success.SingleSuccessApiResponse;
+import site.packit.packit.global.response.success.SuccessApiResponse;
+
+import java.util.List;
 
 @RequestMapping("/api")
 @RestController
@@ -32,5 +37,23 @@ public class ItemController {
                 )
         );
     }
+
+    /**
+     * 체크리스트 아이템 순서 수정
+     */
+    @PatchMapping(value = "travels/{travelId}/check-lists/{checklistId}/items/order")
+    public ResponseEntity<SuccessApiResponse> updateCheckListItem(
+            @PathVariable Long travelId, @PathVariable Long checklistId, @RequestBody List<UpdateItemRequest> updateItemRequests
+    ){
+        itemService.updateItemOrder(travelId, checklistId, updateItemRequests);
+
+        return ResponseEntity.ok(
+                SuccessApiResponse.of(
+                        "아이템 순서 수정이 완료되었습니다."
+                )
+        );
+
+    }
+
 
 }

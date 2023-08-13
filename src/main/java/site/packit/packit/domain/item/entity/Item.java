@@ -42,5 +42,11 @@ public class Item
         this.checkList = checkList;
     }
 
+    public void setListOrder(
+            Integer listOrder
+    ) {
+        this.listOrder = listOrder;
+    }
+
 
 }
