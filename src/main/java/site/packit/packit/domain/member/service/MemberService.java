@@ -1,12 +1,18 @@
 package site.packit.packit.domain.member.service;
 
 import site.packit.packit.domain.member.dto.CreateMemberDto;
-import site.packit.packit.domain.member.entity.Member;
+import site.packit.packit.domain.member.dto.MemberDto;
 
 public interface MemberService {
 
-    void createMember(CreateMemberDto request);
+    Long createMember(CreateMemberDto dto);
 
-    Member getMemberEntityByPersonalId(String personalId);
+    MemberDto getMember(Long memberId);
+
+    void updateMemberNickname(Long memberId, String newNickname);
+
+    void updateMemberProfileImageUrl(Long memberId, String newProfileImageUrl);
+
+    void deleteMember(Long memberId);
 
 }

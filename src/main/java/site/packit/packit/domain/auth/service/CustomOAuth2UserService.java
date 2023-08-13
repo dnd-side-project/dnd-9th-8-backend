@@ -94,7 +94,7 @@ public class CustomOAuth2UserService
             OAuth2UserInfo userInfo,
             AuthenticationProvider authenticationProvider
     ) {
-        memberService.createMember(
+        Long createdMemberId = memberService.createMember(
                 CreateMemberDto.of(
                         userInfo.getId(),
                         userInfo.getEmail(),
@@ -105,6 +105,6 @@ public class CustomOAuth2UserService
                 )
         );
 
-        return memberService.getMemberEntityByPersonalId(userInfo.getId());
+        return memberRepository.getReferenceById(createdMemberId);
     }
 }

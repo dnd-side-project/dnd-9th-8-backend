@@ -2,6 +2,7 @@ package site.packit.packit.domain.member.service;
 
 import org.springframework.stereotype.Service;
 import site.packit.packit.domain.member.dto.CreateMemberDto;
+import site.packit.packit.domain.member.dto.MemberDto;
 import site.packit.packit.domain.member.entity.Member;
 import site.packit.packit.domain.member.repository.MemberRepository;
 import site.packit.packit.global.exception.ResourceNotFoundException;
@@ -19,13 +20,43 @@ public class MemberServiceImpl
     }
 
     @Override
-    public void createMember(CreateMemberDto request) {
-        memberRepository.save(request.toEntity());
+    public Long createMember(CreateMemberDto request) {
+        return memberRepository.save(request.toEntity()).getId();
     }
 
     @Override
-    public Member getMemberEntityByPersonalId(String personalId) {
-        return memberRepository.findByPersonalId(personalId)
+    public MemberDto getMember(Long memberId) {
+        return MemberDto.from(
+                getMemberEntity(memberId)
+        );
+    }
+
+    @Override
+    public void updateMemberNickname(
+            Long memberId,
+            String newNickname
+    ) {
+        Member savedMember = getMemberEntity(memberId);
+        savedMember.updateNickname(newNickname);
+    }
+
+    @Override
+    public void updateMemberProfileImageUrl(
+            Long memberId,
+            String newProfileImageUrl
+    ) {
+        Member savedMember = getMemberEntity(memberId);
+        savedMember.updateProfileImageUrl(newProfileImageUrl);
+    }
+
+    @Override
+    public void deleteMember(Long memberId) {
+        Member savedMember = getMemberEntity(memberId);
+        memberRepository.delete(savedMember);
+    }
+
+    private Member getMemberEntity(Long memberId) {
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new ResourceNotFoundException(MEMBER_NOT_FOUND));
     }
 }

@@ -20,6 +20,7 @@ import static site.packit.packit.domain.member.constant.MemberStatus.ACTIVE;
 @Getter
 public class CustomUserPrincipal
         implements UserDetails, OAuth2User, OidcUser {
+    private final Long memberId;
 
     private final String personalId;
 
@@ -32,12 +33,14 @@ public class CustomUserPrincipal
     private final Map<String, Object> oAuth2UserInfoAttributes;
 
     private CustomUserPrincipal(
+            final Long memberId,
             final String personalId,
             final AuthenticationProvider authenticationProvider,
             final MemberStatus memberStatus,
             final Collection<? extends GrantedAuthority> authorities,
             final Map<String, Object> oAuth2UserInfoAttributes
     ) {
+        this.memberId = memberId;
         this.personalId = personalId;
         this.authenticationProvider = authenticationProvider;
         this.memberStatus = memberStatus;
@@ -58,6 +61,7 @@ public class CustomUserPrincipal
             final Map<String, Object> oAuth2UserInfo
     ) {
         return new CustomUserPrincipal(
+                member.getId(),
                 member.getPersonalId(),
                 member.getAuthenticationProvider(),
                 member.getStatus(),

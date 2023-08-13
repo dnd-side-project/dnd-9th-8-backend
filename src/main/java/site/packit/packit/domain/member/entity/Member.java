@@ -86,4 +86,12 @@ public class Member
                 authenticationProvider
         );
     }
+
+    public void updateNickname(String newNickname) {
+        this.nickname = newNickname;
+    }
+
+    public void updateProfileImageUrl(String newProfileImageUrl) {
+        this.profileImageUrl = newProfileImageUrl;
+    }
 }
