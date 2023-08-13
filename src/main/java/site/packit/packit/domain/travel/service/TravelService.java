@@ -56,12 +56,9 @@ public class TravelService {
     @Transactional
     public void updateTravel(Long travelId, UpdateTravelRequest updateTravelRequest){
 
-//        Travel travel = travelRepository.findById(travelId).get()
-//                .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
-        if(!travelRepository.existsById(travelId)){
-            throw new ResourceNotFoundException(TRAVEL_NOT_FOUND);
-        }
-        Travel travel = travelRepository.findById(travelId).get();
+        Travel travel = travelRepository.findById(travelId)
+                .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+
         travel.updateTravel(updateTravelRequest.title(), updateTravelRequest.startDate(), updateTravelRequest.endDate());
     }
 
@@ -71,13 +68,11 @@ public class TravelService {
     @Transactional
     public void deleteTravel(Long travelId){
 
-        if(!travelRepository.existsById(travelId)){
-            throw new ResourceNotFoundException(TRAVEL_NOT_FOUND);
-        }
+        Travel travel = travelRepository.findById(travelId)
+                .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
 
         // TODO : 여행 하위 항목 (리스트, 리스트 세부) 삭제 코드 추가
 
-        Travel travel = travelRepository.findById(travelId).get();
         travelRepository.delete(travel);
     }
 

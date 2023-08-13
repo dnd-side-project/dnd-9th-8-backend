@@ -56,4 +56,22 @@ public class CheckListController {
 
     }
 
+    /**
+     * 체크리스트 삭제
+     */
+    @DeleteMapping(value = "travels/{travelId}/check-lists/{checkListId}")
+    public ResponseEntity<SuccessApiResponse> deleteCheckList(
+            @PathVariable Long travelId, @PathVariable Long checkListId
+    ){
+        checkListService.deleteCheckListAndReorder(travelId, checkListId);
+
+        return ResponseEntity.ok(
+                SuccessApiResponse.of(
+                        "체크리스트 삭제가 완료되었습니다."
+                )
+        );
+
+    }
+
+
 }

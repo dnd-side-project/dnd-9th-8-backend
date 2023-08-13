@@ -12,6 +12,7 @@ import site.packit.packit.global.exception.ResourceNotFoundException;
 
 import java.util.List;
 
+import static site.packit.packit.domain.checkList.excepiton.CheckListErrorCode.CHECKLIST_NOT_FOUND;
 import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_FOUND;
 
 @Service
@@ -31,11 +32,8 @@ public class CheckListService {
     @Transactional
     public Long createCheckList(Long travelId, CreateCheckListRequest createCheckListRequest){
 
-        if(!travelRepository.existsById(travelId)){
-            throw new ResourceNotFoundException(TRAVEL_NOT_FOUND);
-        }
-
-        Travel travel = travelRepository.findById(travelId).get();
+        Travel travel = travelRepository.findById(travelId)
+                .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
 
         // travel에 속한 체크리스트 중 가장 큰 listOrder 값을 찾기
         Integer maxListOrder = checkListRepository.findMaxListOrderByTravel(travel);
@@ -62,6 +60,9 @@ public class CheckListService {
     @Transactional
     public void updateCheckListOrder(Long travelId, List<UpdateCheckListRequest> updateCheckListRequests){
 
+        Travel travel = travelRepository.findById(travelId)
+                .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+
         // travelId로 해당 여행의 체크리스트들을 가져오기
         List<CheckList> checkLists = checkListRepository.findByTravelId(travelId);
 
@@ -76,5 +77,35 @@ public class CheckListService {
         }
 
         checkListRepository.saveAll(checkLists);
+    }
+
+
+    /**
+     * 체크리스트 삭제
+     */
+    @Transactional
+    public void deleteCheckListAndReorder(Long travelId, Long checklistId) {
+
+        Travel travel = travelRepository.findById(travelId)
+                .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+
+        CheckList deletedCheckList = checkListRepository.findById(checklistId)
+                .orElseThrow(() -> new ResourceNotFoundException(CHECKLIST_NOT_FOUND));
+
+        // 삭제할 체크리스트의 order 가져오기
+        int deletedOrder = deletedCheckList.getListOrder();
+
+        // 삭제할 체크리스트보다 order가 큰 체크리스트들 조회
+        List<CheckList> checkListsToUpdate = checkListRepository.findByTravelAndListOrderGreaterThan(
+                deletedCheckList.getTravel(), deletedOrder);
+
+        // 조회된 체크리스트들의 order를 1씩 감소시키고 저장
+        for (CheckList checkList : checkListsToUpdate) {
+            checkList.setListOrder(checkList.getListOrder() - 1);
+            checkListRepository.save(checkList);
+        }
+
+        // 체크리스트 삭제
+        checkListRepository.delete(deletedCheckList);
     }
 }
