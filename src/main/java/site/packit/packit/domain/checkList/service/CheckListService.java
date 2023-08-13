@@ -105,6 +105,8 @@ public class CheckListService {
             checkListRepository.save(checkList);
         }
 
+        // TODO : 체크리스트 하위 아이템도 삭제하는 코드 추가
+
         // 체크리스트 삭제
         checkListRepository.delete(deletedCheckList);
     }

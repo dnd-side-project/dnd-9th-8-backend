@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import site.packit.packit.domain.checkList.dto.CreateCheckListRequest;
 import site.packit.packit.domain.checkList.dto.UpdateCheckListRequest;
 import site.packit.packit.domain.checkList.service.CheckListService;
-import site.packit.packit.domain.travel.dto.CreateTravelRequest;
 import site.packit.packit.global.response.success.SingleSuccessApiResponse;
 import site.packit.packit.global.response.success.SuccessApiResponse;
 

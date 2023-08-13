@@ -1,20 +1,18 @@
-package site.packit.packit.domain.checkList.entity;
-
+package site.packit.packit.domain.item.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.packit.packit.domain.travel.entity.Travel;
+import site.packit.packit.domain.checkList.entity.CheckList;
 import site.packit.packit.global.audit.BaseEntity;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "checklist")
+@Table(name = "item")
 @Entity
-public class CheckList
+public class Item
         extends BaseEntity {
 
     @Id
@@ -28,22 +26,9 @@ public class CheckList
     private Integer listOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "travel_id")
+    @JoinColumn(name = "checklist_id")
     @JsonIgnore
-    private Travel travel;
+    private CheckList checkList;
 
-    @Builder
-    public CheckList(
-            String title,
-            Integer listOrder,
-            Travel travel
-    ) {
-        this.title = title;
-        this.listOrder = listOrder;
-        this.travel = travel;
-    }
 
-    public void setListOrder(Integer listOrder) {
-        this.listOrder = listOrder;
-    }
 }
