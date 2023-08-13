@@ -100,7 +100,7 @@ public class CheckListService {
                 deletedCheckList.getTravel(), deletedOrder);
 
         // 조회된 체크리스트들의 order를 1씩 감소시키고 저장
-        for (CheckList checkList : checkListsToUpdate) {
+        for (CheckList checkList : checkListsToUpdate){
             checkList.setListOrder(checkList.getListOrder() - 1);
             checkListRepository.save(checkList);
         }

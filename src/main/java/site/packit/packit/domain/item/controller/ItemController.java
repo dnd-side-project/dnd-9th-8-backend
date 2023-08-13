@@ -3,7 +3,6 @@ package site.packit.packit.domain.item.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import site.packit.packit.domain.checkList.dto.UpdateCheckListRequest;
 import site.packit.packit.domain.item.dto.CreateItemRequest;
 import site.packit.packit.domain.item.dto.UpdateItemRequest;
 import site.packit.packit.domain.item.service.ItemService;
@@ -53,6 +52,22 @@ public class ItemController {
                 )
         );
 
+    }
+
+    /**
+     * 체크리스트 아이템 삭제
+     */
+    @DeleteMapping(value = "travels/{travelId}/check-lists/{checkListId}/items/{itemId}")
+    public ResponseEntity<SuccessApiResponse> deleteCheckListItem(
+            @PathVariable Long travelId, @PathVariable Long checkListId, @PathVariable Long itemId
+    ){
+        itemService.deleteItemAndReorder(travelId, checkListId, itemId);
+
+        return ResponseEntity.ok(
+                SuccessApiResponse.of(
+                        "아이템 삭제가 완료되었습니다."
+                )
+        );
     }
 
 

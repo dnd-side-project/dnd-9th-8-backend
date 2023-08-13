@@ -2,7 +2,6 @@ package site.packit.packit.domain.item.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import site.packit.packit.domain.checkList.dto.UpdateCheckListRequest;
 import site.packit.packit.domain.checkList.entity.CheckList;
 import site.packit.packit.domain.checkList.repository.CheckListRepository;
 import site.packit.packit.domain.item.dto.CreateItemRequest;
@@ -16,6 +15,7 @@ import site.packit.packit.global.exception.ResourceNotFoundException;
 import java.util.List;
 
 import static site.packit.packit.domain.checkList.excepiton.CheckListErrorCode.CHECKLIST_NOT_FOUND;
+import static site.packit.packit.domain.item.exception.ItemErrorCode.ITEM_NOT_FOUND;
 import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_FOUND;
 
 @Service
@@ -53,6 +53,7 @@ public class ItemService {
         Item newitem = Item.builder()
                 .title(createItemRequest.title())
                 .listOrder(maxListOrder + 1)
+                .isChecked(false)
                 .checkList(checkList)
                 .build();
 
@@ -88,5 +89,38 @@ public class ItemService {
         }
 
         itemRepository.saveAll(items);
+    }
+
+    /**
+     * 체크리스트 아이템 삭제
+     */
+    @Transactional
+    public void deleteItemAndReorder(Long travelId, Long checklistId, Long itemId){
+
+        Travel travel = travelRepository.findById(travelId)
+                .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+
+        CheckList checkList = checkListRepository.findById(checklistId)
+                .orElseThrow(() -> new ResourceNotFoundException(CHECKLIST_NOT_FOUND));
+
+        Item deletedItem = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException(ITEM_NOT_FOUND));
+
+        // 삭제할 아이템의 order 가져오기
+        int deletedOrder = deletedItem.getListOrder();
+
+        // 삭제할 아이템보다 order가 큰 아이템들 조회
+        List<Item> itemsToUpdate = itemRepository.findByCheckListAndListOrderGreaterThan(
+                deletedItem.getCheckList(), deletedOrder
+        );
+
+        // 조회된 아이템들의 order를 1씩 감소시키고 저장
+        for (Item item : itemsToUpdate){
+            item.setListOrder(item.getListOrder() - 1);
+            itemRepository.save(item);
+        }
+
+        // 아이템 삭제
+        itemRepository.delete(deletedItem);
     }
 }

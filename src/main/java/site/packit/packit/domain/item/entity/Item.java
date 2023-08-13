@@ -26,6 +26,9 @@ public class Item
     @Column(nullable = false)
     private Integer listOrder;
 
+    @Column(columnDefinition = "TINYINT(1)")
+    private Boolean isChecked;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "checklist_id")
     @JsonIgnore
@@ -35,10 +38,12 @@ public class Item
     public Item(
             String title,
             Integer listOrder,
+            Boolean isChecked,
             CheckList checkList
     ) {
         this.title = title;
         this.listOrder = listOrder;
+        this.isChecked = isChecked;
         this.checkList = checkList;
     }
 
