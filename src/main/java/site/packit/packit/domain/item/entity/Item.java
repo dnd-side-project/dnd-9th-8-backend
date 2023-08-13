@@ -3,6 +3,7 @@ package site.packit.packit.domain.item.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.packit.packit.domain.checkList.entity.CheckList;
@@ -29,6 +30,17 @@ public class Item
     @JoinColumn(name = "checklist_id")
     @JsonIgnore
     private CheckList checkList;
+
+    @Builder
+    public Item(
+            String title,
+            Integer listOrder,
+            CheckList checkList
+    ) {
+        this.title = title;
+        this.listOrder = listOrder;
+        this.checkList = checkList;
+    }
 
 
 }

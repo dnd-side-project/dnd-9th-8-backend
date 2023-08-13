@@ -1,6 +1,6 @@
 package site.packit.packit.domain.item.dto;
 
-public record CreateItemtRequest (
+public record CreateItemRequest(
         String title
 
 ) {
