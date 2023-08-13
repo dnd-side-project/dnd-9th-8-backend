@@ -2,6 +2,10 @@ package site.packit.packit.domain.travel.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.packit.packit.domain.checkList.entity.CheckList;
+import site.packit.packit.domain.checkList.repository.CheckListRepository;
+import site.packit.packit.domain.item.entity.Item;
+import site.packit.packit.domain.item.repository.ItemRepository;
 import site.packit.packit.domain.member.entity.Member;
 import site.packit.packit.domain.member.repository.MemberRepository;
 import site.packit.packit.domain.travel.dto.CreateTravelRequest;
@@ -9,6 +13,9 @@ import site.packit.packit.domain.travel.dto.UpdateTravelRequest;
 import site.packit.packit.domain.travel.entity.Travel;
 import site.packit.packit.domain.travel.repository.TravelRepository;
 import site.packit.packit.global.exception.ResourceNotFoundException;
+
+import java.util.List;
+
 import static site.packit.packit.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
 import static site.packit.packit.domain.travel.constant.TravelStatus.INTENDED;
 import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_FOUND;
@@ -18,11 +25,16 @@ public class TravelService {
 
     private final MemberRepository memberRepository;
     private final TravelRepository travelRepository;
+    private final ItemRepository itemRepository;
+    private final CheckListRepository checkListRepository;
 
 
-    public TravelService(MemberRepository memberRepository, TravelRepository travelRepository) {
+
+    public TravelService(MemberRepository memberRepository, TravelRepository travelRepository, ItemRepository itemRepository, CheckListRepository checkListRepository) {
         this.memberRepository = memberRepository;
         this.travelRepository = travelRepository;
+        this.itemRepository = itemRepository;
+        this.checkListRepository = checkListRepository;
     }
 
 
@@ -71,11 +83,15 @@ public class TravelService {
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
 
-        // TODO : 여행 하위 항목 (리스트, 리스트 세부) 삭제 코드 추가
+        List<CheckList> checkListsToDelete = checkListRepository.findByTravelId(travelId);
+        for (CheckList checkList : checkListsToDelete) {
+            // 해당 체크리스트에 딸린 아이템들 삭제
+            List<Item> itemsToDelete = itemRepository.findByCheckListId(checkList.getId());
+            itemRepository.deleteAll(itemsToDelete);
+        }
+        checkListRepository.deleteAll(checkListsToDelete);
 
         travelRepository.delete(travel);
     }
-
-
 
 }
