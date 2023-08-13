@@ -1,5 +1,4 @@
-package site.packit.packit.domain.checkList.entity;
-
+package site.packit.packit.domain.item.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -7,14 +6,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.packit.packit.domain.travel.entity.Travel;
+import site.packit.packit.domain.checkList.entity.CheckList;
 import site.packit.packit.global.audit.BaseEntity;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "checklist")
+@Table(name = "item")
 @Entity
-public class CheckList
+public class Item
         extends BaseEntity {
 
     @Id
@@ -27,20 +26,25 @@ public class CheckList
     @Column(nullable = false)
     private Integer listOrder;
 
+    @Column(columnDefinition = "TINYINT(1)")
+    private Boolean isChecked;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "travel_id")
+    @JoinColumn(name = "checklist_id")
     @JsonIgnore
-    private Travel travel;
+    private CheckList checkList;
 
     @Builder
-    public CheckList(
+    public Item(
             String title,
             Integer listOrder,
-            Travel travel
+            Boolean isChecked,
+            CheckList checkList
     ) {
         this.title = title;
         this.listOrder = listOrder;
-        this.travel = travel;
+        this.isChecked = isChecked;
+        this.checkList = checkList;
     }
 
     public void setListOrder(
@@ -48,4 +52,13 @@ public class CheckList
     ) {
         this.listOrder = listOrder;
     }
+
+    public void setChecked(Boolean checked) {
+        this.isChecked = checked;
+    }
+
+    public void toggleChecked() {
+        this.isChecked = !this.isChecked;
+    }
+
 }
