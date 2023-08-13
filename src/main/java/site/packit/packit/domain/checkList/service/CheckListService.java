@@ -6,6 +6,8 @@ import site.packit.packit.domain.checkList.dto.CreateCheckListRequest;
 import site.packit.packit.domain.checkList.dto.UpdateCheckListRequest;
 import site.packit.packit.domain.checkList.entity.CheckList;
 import site.packit.packit.domain.checkList.repository.CheckListRepository;
+import site.packit.packit.domain.item.entity.Item;
+import site.packit.packit.domain.item.repository.ItemRepository;
 import site.packit.packit.domain.travel.entity.Travel;
 import site.packit.packit.domain.travel.repository.TravelRepository;
 import site.packit.packit.global.exception.ResourceNotFoundException;
@@ -21,9 +23,12 @@ public class CheckListService {
     private final CheckListRepository checkListRepository;
     private final TravelRepository travelRepository;
 
-    public CheckListService(CheckListRepository checkListRepository, TravelRepository travelRepository) {
+    private final ItemRepository itemRepository;
+
+    public CheckListService(CheckListRepository checkListRepository, TravelRepository travelRepository, ItemRepository itemRepository) {
         this.checkListRepository = checkListRepository;
         this.travelRepository = travelRepository;
+        this.itemRepository = itemRepository;
     }
 
     /**
@@ -105,7 +110,12 @@ public class CheckListService {
             checkListRepository.save(checkList);
         }
 
-        // TODO : 체크리스트 하위 아이템도 삭제하는 코드 추가
+        // 삭제할 체크리스트에 딸린 아이템들 삭제
+        List<Item> itemsToDelete = itemRepository.findByCheckListId(checklistId);
+        itemRepository.deleteAll(itemsToDelete);
+
+        // 체크리스트 삭제
+        checkListRepository.delete(deletedCheckList);
 
         // 체크리스트 삭제
         checkListRepository.delete(deletedCheckList);
