@@ -5,12 +5,14 @@ import org.springframework.data.jpa.repository.Query;
 import site.packit.packit.domain.checkList.entity.CheckList;
 import site.packit.packit.domain.travel.entity.Travel;
 
+import java.util.List;
+
 public interface CheckListRepository
         extends JpaRepository<CheckList, Long> {
 
-//    Integer findTopByTravelOrderByListOrderDesc(Travel travel);
-
     @Query("SELECT COALESCE(MAX(c.listOrder), 0) FROM CheckList c WHERE c.travel = :travel")
     Integer findMaxListOrderByTravel(Travel travel);
+
+    List<CheckList> findByTravelId(Long travelId);
 
 }

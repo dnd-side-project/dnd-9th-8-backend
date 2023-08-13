@@ -3,9 +3,13 @@ package site.packit.packit.domain.checkList.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.packit.packit.domain.checkList.dto.CreateCheckListRequest;
+import site.packit.packit.domain.checkList.dto.UpdateCheckListRequest;
 import site.packit.packit.domain.checkList.service.CheckListService;
 import site.packit.packit.domain.travel.dto.CreateTravelRequest;
 import site.packit.packit.global.response.success.SingleSuccessApiResponse;
+import site.packit.packit.global.response.success.SuccessApiResponse;
+
+import java.util.List;
 
 @RequestMapping("/api")
 @RestController
@@ -21,7 +25,7 @@ public class CheckListController {
     /**
      * 새로운 체크리스트 생성
      */
-    @PostMapping(value="{travelId}/check-lists")
+    @PostMapping(value="travels/{travelId}/check-lists")
     public ResponseEntity<SingleSuccessApiResponse<Long>> createCheckList(
             @PathVariable Long travelId, @RequestBody CreateCheckListRequest createCheckListRequest
     ) {
@@ -32,6 +36,24 @@ public class CheckListController {
                         "새로운 체크리스트가 생성되었습니다.", checkListId
                 )
         );
+    }
+
+    /**
+     * 체크리스트 순서 수정
+     */
+    @PatchMapping(value = "travels/{travelId}/check-lists/order")
+    public ResponseEntity<SuccessApiResponse> updateCheckList(
+            @PathVariable Long travelId,@RequestBody List<UpdateCheckListRequest> updateCheckListRequests
+    ){
+
+        checkListService.updateCheckListOrder(travelId, updateCheckListRequests);
+
+        return ResponseEntity.ok(
+                SuccessApiResponse.of(
+                        "체크리스트 순서 수정이 완료되었습니다."
+                )
+        );
+
     }
 
 }
