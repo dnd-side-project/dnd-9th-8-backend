@@ -8,5 +8,5 @@ public interface ImageService {
 
     String uploadImage(MultipartFile image) throws IOException;
 
-    void deleteImage(String imageUrl);
+    void deleteImage(String storedImageFullPath) throws Exception;
 }
