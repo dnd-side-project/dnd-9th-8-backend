@@ -17,4 +17,6 @@ public interface CheckListRepository
 
     List<CheckList> findByTravelAndListOrderGreaterThan(Travel travel, Integer listOrder);
 
+    List<CheckList> findByTravelIdOrderByListOrderAsc(Long travelId);
+
 }
