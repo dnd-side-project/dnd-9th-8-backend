@@ -36,10 +36,6 @@ public class Travel
     @Column(nullable = false)
     private LocalDateTime endDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 50, nullable = false)
-    private TravelStatus travelStatus = INTENDED;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @JsonIgnore
@@ -51,14 +47,12 @@ public class Travel
             DestinationType destinationType,
             LocalDateTime startDate,
             LocalDateTime endDate,
-            TravelStatus travelStatus,
             Member member
     ) {
         this.title = title;
         this.destinationType = destinationType;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.travelStatus = travelStatus;
         this.member = member;
     }
 
