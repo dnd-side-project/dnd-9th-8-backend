@@ -6,6 +6,9 @@ import site.packit.packit.domain.travel.constant.TravelStatus;
 import java.time.LocalDateTime;
 
 public record TravelListDto(
+
+        Long travelId,
+
         String title,
 
         String dDay,
