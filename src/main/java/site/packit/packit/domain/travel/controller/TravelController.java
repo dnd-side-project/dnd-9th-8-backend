@@ -13,7 +13,6 @@ import site.packit.packit.global.response.success.SuccessApiResponse;
 public class TravelController {
 
     private final TravelService travelService;
-
     public TravelController(TravelService travelService) {
         this.travelService = travelService;
     }
