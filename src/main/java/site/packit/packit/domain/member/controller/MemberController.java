@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import site.packit.packit.domain.auth.info.CustomUserPrincipal;
+import site.packit.packit.domain.member.dto.ChangeNicknameRequest;
+import site.packit.packit.domain.member.dto.ChangeProfileImageRequest;
 import site.packit.packit.domain.member.dto.MemberDto;
 import site.packit.packit.domain.member.service.MemberService;
 import site.packit.packit.global.response.success.SingleSuccessApiResponse;
@@ -35,11 +37,11 @@ public class MemberController {
     @PutMapping("/nicknames")
     public ResponseEntity<SuccessApiResponse> updateMemberNickname(
             @AuthenticationPrincipal CustomUserPrincipal principal,
-            String newNickname
-    ) {
+            @RequestBody ChangeNicknameRequest request
+            ) {
         memberService.updateMemberNickname(
                 principal.getMemberId(),
-                newNickname
+                request.newNickname()
         );
 
         return ResponseEntity.ok(
@@ -52,11 +54,11 @@ public class MemberController {
     @PutMapping("/profile-images")
     public ResponseEntity<SuccessApiResponse> updateMemberProfileImage(
             @AuthenticationPrincipal CustomUserPrincipal principal,
-            String newProfileImageUrl
-    ) {
-        memberService.updateMemberNickname(
+            @RequestBody ChangeProfileImageRequest request
+            ) {
+        memberService.updateMemberProfileImageUrl(
                 principal.getMemberId(),
-                newProfileImageUrl
+                request.newProfileImageUrl()
         );
 
         return ResponseEntity.ok(
