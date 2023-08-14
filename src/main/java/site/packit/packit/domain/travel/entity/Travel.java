@@ -40,10 +40,6 @@ public class Travel
     @Column(length = 50, nullable = false)
     private TravelStatus travelStatus = INTENDED;
 
-    // TODO : 추후 여행 아이콘 기본값 설정
-    @Column(length = 1000, nullable = false)
-    private String iconUrl = "";
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @JsonIgnore

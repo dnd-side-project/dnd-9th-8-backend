@@ -13,7 +13,6 @@ import site.packit.packit.domain.travel.dto.UpdateTravelRequest;
 import site.packit.packit.domain.travel.entity.Travel;
 import site.packit.packit.domain.travel.repository.TravelRepository;
 import site.packit.packit.global.exception.ResourceNotFoundException;
-
 import java.util.List;
 
 import static site.packit.packit.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
