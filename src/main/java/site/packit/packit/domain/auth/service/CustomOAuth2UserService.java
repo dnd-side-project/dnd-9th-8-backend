@@ -17,9 +17,12 @@ import site.packit.packit.domain.member.dto.CreateMemberDto;
 import site.packit.packit.domain.member.entity.Member;
 import site.packit.packit.domain.member.repository.MemberRepository;
 import site.packit.packit.domain.member.service.MemberService;
+import site.packit.packit.global.exception.ResourceNotFoundException;
 
 import java.util.Collection;
 import java.util.List;
+
+import static site.packit.packit.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
 
 @Service
 public class CustomOAuth2UserService
@@ -105,6 +108,7 @@ public class CustomOAuth2UserService
                 )
         );
 
-        return memberRepository.getReferenceById(createdMemberId);
+        return memberRepository.findById(createdMemberId)
+                .orElseThrow(() -> new ResourceNotFoundException(MEMBER_NOT_FOUND));
     }
 }
