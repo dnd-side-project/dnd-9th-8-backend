@@ -10,7 +10,6 @@ import site.packit.packit.global.response.success.SuccessApiResponse;
 
 import java.util.List;
 
-import static site.packit.packit.domain.travel.constant.TravelStatus.INTENDED;
 
 @RequestMapping("/api/travels")
 @RestController
@@ -111,5 +110,9 @@ public class TravelController {
                 )
         );
     }
+
+    /**
+     * 여행 상세 조회
+     */
 
 }

@@ -58,7 +58,6 @@ public class TravelService {
                 .destinationType(createTravelRequest.destinationType())
                 .startDate(createTravelRequest.startDate())
                 .endDate(createTravelRequest.endDate())
-                .travelStatus(INTENDED)
                 .member(member)
                 .build();
 
