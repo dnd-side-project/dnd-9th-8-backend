@@ -66,6 +66,19 @@ logging:
     org.springframework.web.servlet:
     org.hibernate.type.descriptor.sql.BasicBinder:
 
+cloud:
+  aws:
+    s3:
+      bucket:
+    credentials:
+      access-key:
+      secret-key:
+    region:
+      static:
+      auto:
+    stack:
+      auto:
+
 ### Custom App Setting ###
 app:
   ### JWT ###
