@@ -101,9 +101,9 @@ public class TravelController {
      */
     @GetMapping(value = "{travelId}")
     public ResponseEntity<SingleSuccessApiResponse<TravelDetailDto>> getDetailTravel(
-            @PathVariable Long travelId
+            @RequestBody GetTravelRequest getTravelRequest, @PathVariable Long travelId
     ){
-        TravelDetailDto travelDetailDto = travelService.getDetailTravel(travelId);
+        TravelDetailDto travelDetailDto = travelService.getDetailTravel(getTravelRequest, travelId);
         return ResponseEntity.ok(
                 SingleSuccessApiResponse.of(
                         "여행 상세 조회에 성공했습니다.", travelDetailDto

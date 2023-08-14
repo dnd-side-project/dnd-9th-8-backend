@@ -13,4 +13,8 @@ public interface StorageRepository
     Storage findByMemberAndTravel(Member member, Travel travel);
 
     List<Storage> findByMember(Member member);
+
+    Boolean existsByMemberIdAndTravelId(Long memberId, Long travelId);
+
+    Storage findByMemberIdAndTravelId(Long memberId, Long travelId);
 }

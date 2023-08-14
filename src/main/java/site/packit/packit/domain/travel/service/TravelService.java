@@ -8,6 +8,7 @@ import site.packit.packit.domain.item.entity.Item;
 import site.packit.packit.domain.item.repository.ItemRepository;
 import site.packit.packit.domain.member.entity.Member;
 import site.packit.packit.domain.member.repository.MemberRepository;
+import site.packit.packit.domain.storage.repository.StorageRepository;
 import site.packit.packit.domain.travel.dto.*;
 import site.packit.packit.domain.travel.entity.Travel;
 import site.packit.packit.domain.travel.repository.TravelRepository;
@@ -31,13 +32,16 @@ public class TravelService {
     private final ItemRepository itemRepository;
     private final CheckListRepository checkListRepository;
 
+    private final StorageRepository storageRepository;
 
 
-    public TravelService(MemberRepository memberRepository, TravelRepository travelRepository, ItemRepository itemRepository, CheckListRepository checkListRepository) {
+
+    public TravelService(MemberRepository memberRepository, TravelRepository travelRepository, ItemRepository itemRepository, CheckListRepository checkListRepository, StorageRepository storageRepository) {
         this.memberRepository = memberRepository;
         this.travelRepository = travelRepository;
         this.itemRepository = itemRepository;
         this.checkListRepository = checkListRepository;
+        this.storageRepository = storageRepository;
     }
 
 
@@ -105,22 +109,12 @@ public class TravelService {
         List<Travel> upcomingTravels = travelRepository.findByStartDateAfterAndMemberIdOrderByStartDateAsc(now, getTravelRequest.memberId());
 
         return upcomingTravels.stream()
-                .map(this::convertToDto)
+                .map(travel -> convertToDto(travel, isAddedToStorage(travel.getId(), getTravelRequest.memberId())))
                 .collect(Collectors.toList());
 
     }
 
-    private TravelListDto convertToDto(Travel travel) {
-        return new TravelListDto(
-                travel.getId(),
-                travel.getTitle(),
-                calculateDDay(travel.getStartDate()),
-                travel.getDestinationType(),
-                travel.getStartDate(),
-                travel.getEndDate()
-        );
-    }
-
+    // 디데이 계산
     private String calculateDDay(LocalDateTime startDate) {
         LocalDate today = LocalDate.now();
         LocalDate travelDate = startDate.toLocalDate();
@@ -134,17 +128,35 @@ public class TravelService {
     @Transactional(readOnly = true)
     public List<TravelListDto> getPastTravel(GetTravelRequest getTravelRequest) {
         LocalDateTime now = LocalDateTime.now();
+
         List<Travel> pastTravels = travelRepository.findByEndDateBeforeAndMemberIdOrderByEndDateDesc(now, getTravelRequest.memberId());
 
         return pastTravels.stream()
-                .map(this::convertToDto)
+                .map(travel -> convertToDto(travel, isAddedToStorage(travel.getId(), getTravelRequest.memberId())))
                 .collect(Collectors.toList());
+    }
+
+    // 보관함 유무 여부 판단
+    private boolean isAddedToStorage(Long travelId, Long memberId) {
+        return storageRepository.existsByMemberIdAndTravelId(memberId, travelId);
+    }
+
+    private TravelListDto convertToDto(Travel travel, boolean isAddedToStorage) {
+        return new TravelListDto(
+                travel.getId(),
+                travel.getTitle(),
+                calculateDDay(travel.getStartDate()),
+                travel.getDestinationType(),
+                travel.getStartDate(),
+                travel.getEndDate(),
+                isAddedToStorage
+        );
     }
 
     /**
      * 여행 상세 조회
      */
-    public TravelDetailDto getDetailTravel(Long travelId) {
+    public TravelDetailDto getDetailTravel(GetTravelRequest getTravelRequest, Long travelId) {
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
 
@@ -166,13 +178,16 @@ public class TravelService {
             checkListDtoList.add(checkListDto);
         }
 
+        Boolean isInStorage = isAddedToStorage(getTravelRequest.memberId(), travelId);
+
         return new TravelDetailDto(
                 travel.getTitle(),
                 calculateDDay(travel.getStartDate()),
                 travel.getDestinationType(),
                 travel.getStartDate(),
                 travel.getEndDate(),
-                checkListDtoList
+                checkListDtoList,
+                isInStorage
         );
     }
 
