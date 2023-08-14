@@ -8,10 +8,7 @@ import site.packit.packit.domain.item.entity.Item;
 import site.packit.packit.domain.item.repository.ItemRepository;
 import site.packit.packit.domain.member.entity.Member;
 import site.packit.packit.domain.member.repository.MemberRepository;
-import site.packit.packit.domain.travel.dto.CreateTravelRequest;
-import site.packit.packit.domain.travel.dto.GetTravelRequest;
-import site.packit.packit.domain.travel.dto.TravelListDto;
-import site.packit.packit.domain.travel.dto.UpdateTravelRequest;
+import site.packit.packit.domain.travel.dto.*;
 import site.packit.packit.domain.travel.entity.Travel;
 import site.packit.packit.domain.travel.repository.TravelRepository;
 import site.packit.packit.global.exception.ResourceNotFoundException;
@@ -19,6 +16,7 @@ import site.packit.packit.global.exception.ResourceNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -142,6 +140,41 @@ public class TravelService {
         return pastTravels.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 여행 상세 조회
+     */
+    public TravelDetailDto getDetailTravel(Long travelId) {
+        Travel travel = travelRepository.findById(travelId)
+                .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+
+        List<CheckList> checkLists = checkListRepository.findByTravelIdOrderByListOrderAsc(travelId);
+
+        List<CheckListDto> checkListDtoList = new ArrayList<>();
+        for (CheckList checkList : checkLists) {
+            List<ItemDto> itemDtoList = itemRepository.findByCheckListIdOrderByListOrderAsc(checkList.getId())
+                    .stream()
+                    .map(item -> new ItemDto(item.getTitle(), item.getListOrder(), item.getIsChecked()))
+                    .collect(Collectors.toList());
+
+            CheckListDto checkListDto = new CheckListDto(
+                    checkList.getTitle(),
+                    checkList.getListOrder(),
+                    itemDtoList
+            );
+
+            checkListDtoList.add(checkListDto);
+        }
+
+        return new TravelDetailDto(
+                travel.getTitle(),
+                calculateDDay(travel.getStartDate()),
+                travel.getDestinationType(),
+                travel.getStartDate(),
+                travel.getEndDate(),
+                checkListDtoList
+        );
     }
 
 }

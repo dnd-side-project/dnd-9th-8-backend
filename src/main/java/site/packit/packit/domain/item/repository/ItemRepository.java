@@ -18,5 +18,7 @@ public interface ItemRepository
 
     List<Item> findByCheckListAndListOrderGreaterThan(CheckList checkList, Integer listOrder);
 
+    List<Item> findByCheckListIdOrderByListOrderAsc(Long checkListId);
+
 
 }

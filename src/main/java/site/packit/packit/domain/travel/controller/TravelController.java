@@ -2,10 +2,7 @@ package site.packit.packit.domain.travel.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import site.packit.packit.domain.travel.dto.CreateTravelRequest;
-import site.packit.packit.domain.travel.dto.GetTravelRequest;
-import site.packit.packit.domain.travel.dto.TravelListDto;
-import site.packit.packit.domain.travel.dto.UpdateTravelRequest;
+import site.packit.packit.domain.travel.dto.*;
 import site.packit.packit.domain.travel.service.TravelService;
 import site.packit.packit.global.response.success.MultipleSuccessApiResponse;
 import site.packit.packit.global.response.success.SingleSuccessApiResponse;
@@ -98,6 +95,21 @@ public class TravelController {
                 MultipleSuccessApiResponse.of(
                         "지난 여행 조회에 성공했습니다.", upcomingTravels
                 ));
+    }
+
+    /**
+     * 여행 상세 조회
+     */
+    @GetMapping(value = "{travelId}")
+    public ResponseEntity<SingleSuccessApiResponse<TravelDetailDto>> getDetailTravel(
+            @PathVariable Long travelId
+    ){
+        TravelDetailDto travelDetailDto = travelService.getDetailTravel(travelId);
+        return ResponseEntity.ok(
+                SingleSuccessApiResponse.of(
+                        "여행 상세 조회에 성공했습니다.", travelDetailDto
+                )
+        );
     }
 
 }
