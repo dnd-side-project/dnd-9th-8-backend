@@ -17,7 +17,9 @@ public record TravelDetailDto(
 
         LocalDateTime endDate,
 
-        List<CheckListDto> checkListDtoList
+        List<CheckListDto> checkListDtoList,
+
+        Boolean isInStorage
 
 ) {
 

@@ -17,7 +17,8 @@ public record TravelListDto(
 
         LocalDateTime startDate,
 
-        LocalDateTime endDate
+        LocalDateTime endDate,
+        Boolean isInStorage
 
 
 ) {
