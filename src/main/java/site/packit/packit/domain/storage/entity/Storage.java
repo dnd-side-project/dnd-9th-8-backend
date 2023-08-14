@@ -4,6 +4,7 @@ package site.packit.packit.domain.storage.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.packit.packit.domain.member.entity.Member;
@@ -31,5 +32,13 @@ public class Storage
     @JsonIgnore
     private Travel travel;
 
+    @Builder
+    public Storage(
+            Member member,
+            Travel travel
+    ) {
+        this.member = member;
+        this.travel = travel;
+    }
 
 }

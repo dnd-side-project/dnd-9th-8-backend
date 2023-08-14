@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static site.packit.packit.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
-import static site.packit.packit.domain.travel.constant.TravelStatus.INTENDED;
 import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_FOUND;
 
 @Service
