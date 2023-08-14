@@ -19,7 +19,7 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<SingleSuccessApiResponse<MemberDto>> getMember(
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
@@ -66,7 +66,7 @@ public class MemberController {
         );
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<SuccessApiResponse> deleteMember(
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
