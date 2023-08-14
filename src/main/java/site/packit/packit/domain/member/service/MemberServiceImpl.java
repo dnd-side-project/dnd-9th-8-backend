@@ -1,6 +1,7 @@
 package site.packit.packit.domain.member.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import site.packit.packit.domain.member.dto.CreateMemberDto;
 import site.packit.packit.domain.member.dto.MemberDto;
 import site.packit.packit.domain.member.entity.Member;
@@ -9,6 +10,7 @@ import site.packit.packit.global.exception.ResourceNotFoundException;
 
 import static site.packit.packit.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
 
+@Transactional
 @Service
 public class MemberServiceImpl
         implements MemberService {
@@ -24,6 +26,7 @@ public class MemberServiceImpl
         return memberRepository.save(request.toEntity()).getId();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public MemberDto getMember(Long memberId) {
         return MemberDto.from(

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class AmazonS3ImageService
@@ -23,7 +25,7 @@ public class AmazonS3ImageService
 
     @Override
     public String uploadImage(MultipartFile image) throws IOException {
-        String originalFilename = image.getOriginalFilename();
+        String storedImageName = getStoredImageName(Objects.requireNonNull(image.getOriginalFilename()));
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(image.getSize());
@@ -31,18 +33,42 @@ public class AmazonS3ImageService
 
         amazonS3.putObject(
                 bucket,
-                originalFilename,
+                storedImageName,
                 image.getInputStream(),
                 metadata
         );
-        return amazonS3.getUrl(bucket, originalFilename).toString();
+        return amazonS3.getUrl(bucket, storedImageName).toString();
     }
 
     @Override
-    public void deleteImage(String originalFilename) {
+    public void deleteImage(String storedImageFullPath) throws Exception {
+
+        String storedImageResourcePath = getStoredImageResourcePath(storedImageFullPath);
+
+        // 삭제할 파일이 존재하는지 검증
+        if (!amazonS3.doesObjectExist(
+                bucket,
+                storedImageResourcePath
+        )) {
+            throw new Exception("이미지가 존재하지 않습니다.");
+        }
+
         amazonS3.deleteObject(
                 bucket,
-                originalFilename
+                storedImageFullPath
         );
+    }
+
+    private String getStoredImageName(
+            String originalFileName
+    ) {
+        String uuid = UUID.randomUUID().toString();
+        String imageExtension = originalFileName
+                .substring(originalFileName.lastIndexOf(".") + 1);
+        return uuid + "." + imageExtension;
+    }
+
+    private String getStoredImageResourcePath(String storedImageFullPath) {
+        return storedImageFullPath.substring(storedImageFullPath.lastIndexOf(".com/") + 5);
     }
 }
