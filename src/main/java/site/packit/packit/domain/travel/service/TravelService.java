@@ -113,6 +113,7 @@ public class TravelService {
 
     private TravelListDto convertToDto(Travel travel) {
         return new TravelListDto(
+                travel.getId(),
                 travel.getTitle(),
                 calculateDDay(travel.getStartDate()),
                 travel.getDestinationType(),

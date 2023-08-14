@@ -111,8 +111,4 @@ public class TravelController {
         );
     }
 
-    /**
-     * 여행 상세 조회
-     */
-
 }
