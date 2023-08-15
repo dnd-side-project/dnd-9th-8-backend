@@ -136,12 +136,22 @@ public class TravelService {
                 .collect(Collectors.toList());
     }
 
-    // 보관함 유무 여부 판단
-    private boolean isAddedToStorage(Long travelId, Long memberId) {
-        return storageRepository.existsByMemberIdAndTravelId(memberId, travelId);
-    }
-
     private TravelListDto convertToDto(Travel travel, boolean isAddedToStorage) {
+        List<CheckList> checkLists = checkListRepository.findByTravelIdOrderByListOrderAsc(travel.getId());
+        int unfinishedItemCount = 0;
+        int finishedItemCount = 0;
+
+        for (CheckList checkList : checkLists) {
+            List<Item> items = itemRepository.findByCheckListId(checkList.getId());
+            for (Item item : items) {
+                if (item.getIsChecked()) {
+                    finishedItemCount++;
+                } else {
+                    unfinishedItemCount++;
+                }
+            }
+        }
+
         return new TravelListDto(
                 travel.getId(),
                 travel.getTitle(),
@@ -149,8 +159,15 @@ public class TravelService {
                 travel.getDestinationType(),
                 travel.getStartDate(),
                 travel.getEndDate(),
-                isAddedToStorage
+                isAddedToStorage,
+                unfinishedItemCount,
+                finishedItemCount
         );
+    }
+
+    // 보관함 유무 여부 판단
+    private boolean isAddedToStorage(Long travelId, Long memberId) {
+        return storageRepository.existsByMemberIdAndTravelId(memberId, travelId);
     }
 
     /**
