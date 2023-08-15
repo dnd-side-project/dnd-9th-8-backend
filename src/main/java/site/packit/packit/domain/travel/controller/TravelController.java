@@ -111,4 +111,19 @@ public class TravelController {
         );
     }
 
+    /**
+     * 여행 불러오기
+     */
+    @PostMapping(value = "bring/{travelId}")
+    public ResponseEntity<SingleSuccessApiResponse<Long>> bringTravel(
+            @PathVariable Long travelId, @RequestBody BringTravelRequest bringTravelRequest
+    ){
+        Long Id = travelService.createBringTravel(travelId, bringTravelRequest);
+        return ResponseEntity.ok(
+                SingleSuccessApiResponse.of(
+                        "여행 불러오기 후 생성에 성공했습니다", Id
+                )
+        );
+    }
+
 }

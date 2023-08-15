@@ -209,4 +209,46 @@ public class TravelService {
         );
     }
 
+    /**
+     * 여행 불러오기
+     */
+    public Long createBringTravel(Long travelId, BringTravelRequest bringTravelRequest) {
+        Travel originalTravel = travelRepository.findById(travelId)
+                .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+
+        // 복사해서 새로운 여행 생성
+        Travel newTravel = Travel.builder()
+                .title(bringTravelRequest.title())
+                .destinationType(originalTravel.getDestinationType())
+                .startDate(bringTravelRequest.startDate())
+                .endDate(bringTravelRequest.endDate())
+                .member(originalTravel.getMember())
+                .build();
+        travelRepository.save(newTravel);
+
+        // 체크리스트 및 아이템 복사
+        List<CheckList> originalCheckLists = checkListRepository.findByTravelIdOrderByListOrderAsc(travelId);
+        for (CheckList originalCheckList : originalCheckLists) {
+            CheckList newCheckList = CheckList.builder()
+                    .title(originalCheckList.getTitle())
+                    .listOrder(originalCheckList.getListOrder())
+                    .travel(newTravel)
+                    .build();
+            checkListRepository.save(newCheckList);
+
+            List<Item> originalItems = itemRepository.findByCheckListIdOrderByListOrderAsc(originalCheckList.getId());
+            for (Item originalItem : originalItems) {
+                Item newItem = Item.builder()
+                        .title(originalItem.getTitle())
+                        .listOrder(originalItem.getListOrder())
+                        .isChecked(false) // 체크는 안 되어있게
+                        .checkList(newCheckList)
+                        .build();
+                itemRepository.save(newItem);
+            }
+        }
+
+        return newTravel.getId();
+    }
+
 }
