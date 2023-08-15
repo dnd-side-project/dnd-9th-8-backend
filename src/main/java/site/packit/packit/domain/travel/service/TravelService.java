@@ -250,3 +250,12 @@ public class TravelService {
         return newTravel.getId();
     }
 
+    /**
+     * 특정 사용자의 여행 개수 조회
+     */
+    public Integer getTravelCount(
+            CustomUserPrincipal principal
+    ) {
+        return travelRepository.countAllByMember_Id(principal.getMemberId());
+    }
+}
