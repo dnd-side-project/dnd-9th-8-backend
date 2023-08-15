@@ -31,10 +31,8 @@ public class CustomOAuth2UserService
     private final MemberRepository memberRepository;
     private final MemberService memberService;
 
-    // TODO : 기획이 결정되면 기본 값 자동 주입으로 리팩토링
-    private String memberDefaultProfileImageUrl = "DEFAULT_PROFILE_IMAGE_URL";
-    private String memberDefaultNickname = "여행자";
-    private Integer memberDefaultListCheckLimitCount = 2;
+    // TODO : 기획에 따라 변경
+    private static final String DEFAULT_PROFILE_IMAGE_URL ="https://dnd--pack-it.s3.ap-northeast-2.amazonaws.com/profile-images/default-profile-image.png";
 
     public CustomOAuth2UserService(
             MemberRepository memberRepository,
@@ -102,8 +100,7 @@ public class CustomOAuth2UserService
                         userInfo.getId(),
                         userInfo.getEmail(),
                         userInfo.getName(),
-                        userInfo.getProfileImageUrl(),
-                        memberDefaultListCheckLimitCount,
+                        DEFAULT_PROFILE_IMAGE_URL,
                         authenticationProvider
                 )
         );

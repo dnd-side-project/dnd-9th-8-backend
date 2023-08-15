@@ -2,6 +2,7 @@ package site.packit.packit.domain.travel.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.domain.checkList.entity.CheckList;
 import site.packit.packit.domain.checkList.repository.CheckListRepository;
 import site.packit.packit.domain.item.entity.Item;
@@ -34,8 +35,6 @@ public class TravelService {
 
     private final StorageRepository storageRepository;
 
-
-
     public TravelService(MemberRepository memberRepository, TravelRepository travelRepository, ItemRepository itemRepository, CheckListRepository checkListRepository, StorageRepository storageRepository) {
         this.memberRepository = memberRepository;
         this.travelRepository = travelRepository;
@@ -50,7 +49,7 @@ public class TravelService {
      */
     public Long createTravel(CreateTravelRequest createTravelRequest) {
 
-        if(!memberRepository.existsById(createTravelRequest.memberId())){
+        if (!memberRepository.existsById(createTravelRequest.memberId())) {
             throw new ResourceNotFoundException(MEMBER_NOT_FOUND);
         }
 
@@ -72,7 +71,7 @@ public class TravelService {
      * 여행 수정
      */
     @Transactional
-    public void updateTravel(Long travelId, UpdateTravelRequest updateTravelRequest){
+    public void updateTravel(Long travelId, UpdateTravelRequest updateTravelRequest) {
 
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
@@ -84,7 +83,7 @@ public class TravelService {
      * 여행 삭제
      */
     @Transactional
-    public void deleteTravel(Long travelId){
+    public void deleteTravel(Long travelId) {
 
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
@@ -104,7 +103,7 @@ public class TravelService {
      * 예정된 여행 조회
      */
     @Transactional(readOnly = true)
-    public List<TravelListDto> getUpcomingTravel(Long memberId){
+    public List<TravelListDto> getUpcomingTravel(Long memberId) {
         LocalDateTime now = LocalDateTime.now();
         List<Travel> upcomingTravels = travelRepository.findByStartDateAfterAndMemberIdOrderByStartDateAsc(now, memberId);
 
@@ -251,4 +250,3 @@ public class TravelService {
         return newTravel.getId();
     }
 
-}

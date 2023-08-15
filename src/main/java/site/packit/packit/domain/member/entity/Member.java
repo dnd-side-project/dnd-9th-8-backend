@@ -35,9 +35,6 @@ public class Member
     @Column(length = 1000, nullable = false)
     private String profileImageUrl;
 
-    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
-    private Integer listCheckLimitCount;
-
     @Enumerated(EnumType.STRING)
     @Column(length = 50, nullable = false)
     private MemberStatus status = ACTIVE;
@@ -55,7 +52,6 @@ public class Member
             String email,
             String nickname,
             String profileImageUrl,
-            Integer listCheckLimitCount,
             MemberRole role,
             AuthenticationProvider authenticationProvider
     ) {
@@ -63,7 +59,6 @@ public class Member
         this.email = email;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
-        this.listCheckLimitCount = listCheckLimitCount;
         this.role = role;
         this.authenticationProvider = authenticationProvider;
     }
@@ -73,7 +68,6 @@ public class Member
             String email,
             String nickname,
             String profileImageUrl,
-            Integer listCheckLimit,
             AuthenticationProvider authenticationProvider
     ) {
         return new Member(
@@ -81,7 +75,6 @@ public class Member
                 email,
                 nickname,
                 profileImageUrl,
-                listCheckLimit,
                 USER,
                 authenticationProvider
         );
