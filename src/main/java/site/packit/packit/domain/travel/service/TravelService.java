@@ -104,12 +104,12 @@ public class TravelService {
      * 예정된 여행 조회
      */
     @Transactional(readOnly = true)
-    public List<TravelListDto> getUpcomingTravel(GetTravelRequest getTravelRequest){
+    public List<TravelListDto> getUpcomingTravel(Long memberId){
         LocalDateTime now = LocalDateTime.now();
-        List<Travel> upcomingTravels = travelRepository.findByStartDateAfterAndMemberIdOrderByStartDateAsc(now, getTravelRequest.memberId());
+        List<Travel> upcomingTravels = travelRepository.findByStartDateAfterAndMemberIdOrderByStartDateAsc(now, memberId);
 
         return upcomingTravels.stream()
-                .map(travel -> convertToDto(travel, isAddedToStorage(travel.getId(), getTravelRequest.memberId())))
+                .map(travel -> convertToDto(travel, isAddedToStorage(travel.getId(), memberId)))
                 .collect(Collectors.toList());
 
     }
@@ -126,13 +126,13 @@ public class TravelService {
      * 지난 여행 조회
      */
     @Transactional(readOnly = true)
-    public List<TravelListDto> getPastTravel(GetTravelRequest getTravelRequest) {
+    public List<TravelListDto> getPastTravel(Long memberId) {
         LocalDateTime now = LocalDateTime.now();
 
-        List<Travel> pastTravels = travelRepository.findByEndDateBeforeAndMemberIdOrderByEndDateDesc(now, getTravelRequest.memberId());
+        List<Travel> pastTravels = travelRepository.findByEndDateBeforeAndMemberIdOrderByEndDateDesc(now, memberId);
 
         return pastTravels.stream()
-                .map(travel -> convertToDto(travel, isAddedToStorage(travel.getId(), getTravelRequest.memberId())))
+                .map(travel -> convertToDto(travel, isAddedToStorage(travel.getId(), memberId)))
                 .collect(Collectors.toList());
     }
 
@@ -173,7 +173,7 @@ public class TravelService {
     /**
      * 여행 상세 조회
      */
-    public TravelDetailDto getDetailTravel(GetTravelRequest getTravelRequest, Long travelId) {
+    public TravelDetailDto getDetailTravel(Long memberId, Long travelId) {
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
 
@@ -196,7 +196,7 @@ public class TravelService {
             checkListDtoList.add(checkListDto);
         }
 
-        Boolean isInStorage = isAddedToStorage(getTravelRequest.memberId(), travelId);
+        Boolean isInStorage = isAddedToStorage(memberId, travelId);
 
         return new TravelDetailDto(
                 travel.getTitle(),

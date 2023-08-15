@@ -73,9 +73,9 @@ public class TravelController {
      */
     @GetMapping(value = "upcoming")
     public ResponseEntity<MultipleSuccessApiResponse<TravelListDto>> getUpcomingTravel(
-            @RequestBody GetTravelRequest getTravelRequest
+            @RequestParam Long memberId
     ){
-        List<TravelListDto> upcomingTravels = travelService.getUpcomingTravel(getTravelRequest);
+        List<TravelListDto> upcomingTravels = travelService.getUpcomingTravel(memberId);
         return ResponseEntity.ok(
                 MultipleSuccessApiResponse.of(
                         "예정된 여행 조회에 성공했습니다.", upcomingTravels
@@ -87,9 +87,9 @@ public class TravelController {
      */
     @GetMapping(value = "past")
     public ResponseEntity<MultipleSuccessApiResponse<TravelListDto>> getPastTravel(
-            @RequestBody GetTravelRequest getTravelRequest
+            @RequestParam Long memberId
     ){
-        List<TravelListDto> upcomingTravels = travelService.getPastTravel(getTravelRequest);
+        List<TravelListDto> upcomingTravels = travelService.getPastTravel(memberId);
         return ResponseEntity.ok(
                 MultipleSuccessApiResponse.of(
                         "지난 여행 조회에 성공했습니다.", upcomingTravels
@@ -101,9 +101,9 @@ public class TravelController {
      */
     @GetMapping(value = "{travelId}")
     public ResponseEntity<SingleSuccessApiResponse<TravelDetailDto>> getDetailTravel(
-            @RequestBody GetTravelRequest getTravelRequest, @PathVariable Long travelId
+            @RequestParam Long memberId, @PathVariable Long travelId
     ){
-        TravelDetailDto travelDetailDto = travelService.getDetailTravel(getTravelRequest, travelId);
+        TravelDetailDto travelDetailDto = travelService.getDetailTravel(memberId, travelId);
         return ResponseEntity.ok(
                 SingleSuccessApiResponse.of(
                         "여행 상세 조회에 성공했습니다.", travelDetailDto
