@@ -7,8 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.domain.image.service.ImageService;
 import site.packit.packit.domain.member.dto.ChangeNicknameRequest;
-import site.packit.packit.domain.member.dto.MemberDto;
+import site.packit.packit.domain.member.dto.MemberWithTravelCountDto;
 import site.packit.packit.domain.member.service.MemberService;
+import site.packit.packit.domain.travel.service.TravelService;
 import site.packit.packit.global.response.success.SingleSuccessApiResponse;
 import site.packit.packit.global.response.success.SuccessApiResponse;
 
@@ -18,25 +19,30 @@ import java.io.IOException;
 @RestController
 public class MemberController {
 
+    private final TravelService travelService;
     private final MemberService memberService;
     private final ImageService imageService;
 
     public MemberController(
+            TravelService travelService,
             MemberService memberService,
             ImageService imageService
     ) {
+        this.travelService = travelService;
         this.memberService = memberService;
         this.imageService = imageService;
     }
 
     @GetMapping
-    public ResponseEntity<SingleSuccessApiResponse<MemberDto>> getMember(
+    public ResponseEntity<SingleSuccessApiResponse<MemberWithTravelCountDto>> getMember(
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         return ResponseEntity.ok(
                 SingleSuccessApiResponse.of(
                         "성공적으로 회원 정보가 조회되었습니다.",
-                        memberService.getMember(principal.getMemberId()
+                        MemberWithTravelCountDto.from(
+                                memberService.getMember(principal.getMemberId()),
+                                travelService.getTravelCount(principal)
                         )
                 )
         );

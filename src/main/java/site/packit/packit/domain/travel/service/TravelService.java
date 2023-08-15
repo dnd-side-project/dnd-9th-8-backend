@@ -1,7 +1,9 @@
 package site.packit.packit.domain.travel.service;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.domain.checkList.entity.CheckList;
 import site.packit.packit.domain.checkList.repository.CheckListRepository;
 import site.packit.packit.domain.item.entity.Item;
@@ -192,4 +194,12 @@ public class TravelService {
         );
     }
 
+    /**
+     * 특정 사용자의 여행 개수 조회
+     */
+    public Integer getTravelCount(
+            CustomUserPrincipal principal
+    ) {
+        return travelRepository.countAllByMember_Id(principal.getMemberId());
+    }
 }
