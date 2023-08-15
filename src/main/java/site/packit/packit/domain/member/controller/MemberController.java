@@ -3,22 +3,30 @@ package site.packit.packit.domain.member.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import site.packit.packit.domain.auth.info.CustomUserPrincipal;
+import site.packit.packit.domain.image.service.ImageService;
 import site.packit.packit.domain.member.dto.ChangeNicknameRequest;
-import site.packit.packit.domain.member.dto.ChangeProfileImageRequest;
 import site.packit.packit.domain.member.dto.MemberDto;
 import site.packit.packit.domain.member.service.MemberService;
 import site.packit.packit.global.response.success.SingleSuccessApiResponse;
 import site.packit.packit.global.response.success.SuccessApiResponse;
+
+import java.io.IOException;
 
 @RequestMapping("/api/members")
 @RestController
 public class MemberController {
 
     private final MemberService memberService;
+    private final ImageService imageService;
 
-    public MemberController(MemberService memberService) {
+    public MemberController(
+            MemberService memberService,
+            ImageService imageService
+    ) {
         this.memberService = memberService;
+        this.imageService = imageService;
     }
 
     @GetMapping
@@ -38,7 +46,7 @@ public class MemberController {
     public ResponseEntity<SuccessApiResponse> updateMemberNickname(
             @AuthenticationPrincipal CustomUserPrincipal principal,
             @RequestBody ChangeNicknameRequest request
-            ) {
+    ) {
         memberService.updateMemberNickname(
                 principal.getMemberId(),
                 request.newNickname()
@@ -54,11 +62,11 @@ public class MemberController {
     @PutMapping("/profile-images")
     public ResponseEntity<SuccessApiResponse> updateMemberProfileImage(
             @AuthenticationPrincipal CustomUserPrincipal principal,
-            @RequestBody ChangeProfileImageRequest request
-            ) {
+            MultipartFile image
+    ) throws IOException {
         memberService.updateMemberProfileImageUrl(
                 principal.getMemberId(),
-                request.newProfileImageUrl()
+                imageService.uploadImage(image)
         );
 
         return ResponseEntity.ok(
