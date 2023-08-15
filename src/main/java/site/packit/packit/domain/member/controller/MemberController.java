@@ -42,8 +42,7 @@ public class MemberController {
                         "성공적으로 회원 정보가 조회되었습니다.",
                         MemberWithTravelCountDto.from(
                                 memberService.getMember(principal.getMemberId()),
-//                                travelService.getTravelCount(principal)
-                                3
+                                travelService.getTravelCount(principal)
                         )
                 )
         );
