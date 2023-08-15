@@ -5,12 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import site.packit.packit.domain.member.entity.Member;
 import site.packit.packit.domain.travel.constant.DestinationType;
-import site.packit.packit.domain.travel.constant.TravelStatus;
 import site.packit.packit.global.audit.BaseEntity;
 
 import java.time.LocalDateTime;
-
-import static site.packit.packit.domain.travel.constant.TravelStatus.INTENDED;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
