@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.packit.packit.domain.storage.dto.StorageListDto;
 import site.packit.packit.domain.storage.dto.UpdateStorage;
-import site.packit.packit.domain.storage.entity.Storage;
 import site.packit.packit.domain.storage.service.StorageService;
 import site.packit.packit.global.response.success.MultipleSuccessApiResponse;
 import site.packit.packit.global.response.success.SuccessApiResponse;
@@ -26,9 +25,9 @@ public class StorageController {
      */
     @PostMapping("/{travelId}")
     public ResponseEntity<SuccessApiResponse> updateStorage(
-            @PathVariable Long travelId, @RequestParam Long memberId
-    ) {
-        storageService.toggleStorage(memberId, travelId);
+            @PathVariable Long travelId, @RequestBody UpdateStorage updateStorage
+    ){
+        storageService.toggleStorage(updateStorage.memberId(), travelId);
         return ResponseEntity.ok(
                 SuccessApiResponse.of(
                         "보관함 추가/취소에 성공했습니다."
@@ -40,9 +39,9 @@ public class StorageController {
      */
     @GetMapping("")
     public ResponseEntity<MultipleSuccessApiResponse<StorageListDto>> getStorageList(
-            @RequestParam Long memberId
+            @RequestBody UpdateStorage updateStorage
     ){
-        List<StorageListDto> storageList = storageService.getStorageList(memberId);
+        List<StorageListDto> storageList = storageService.getStorageList(updateStorage.memberId());
 
         return ResponseEntity.ok(
                 MultipleSuccessApiResponse.of(
