@@ -25,9 +25,9 @@ public class StorageController {
      */
     @PostMapping("/{travelId}")
     public ResponseEntity<SuccessApiResponse> updateStorage(
-            @PathVariable Long travelId, @RequestBody UpdateStorage updateStorage
+            @PathVariable Long travelId, @RequestParam Long memberId
     ){
-        storageService.toggleStorage(updateStorage.memberId(), travelId);
+        storageService.toggleStorage(memberId, travelId);
         return ResponseEntity.ok(
                 SuccessApiResponse.of(
                         "보관함 추가/취소에 성공했습니다."
@@ -39,9 +39,9 @@ public class StorageController {
      */
     @GetMapping("")
     public ResponseEntity<MultipleSuccessApiResponse<StorageListDto>> getStorageList(
-            @RequestBody UpdateStorage updateStorage
+            @RequestParam Long memberId
     ){
-        List<StorageListDto> storageList = storageService.getStorageList(updateStorage.memberId());
+        List<StorageListDto> storageList = storageService.getStorageList(memberId);
 
         return ResponseEntity.ok(
                 MultipleSuccessApiResponse.of(

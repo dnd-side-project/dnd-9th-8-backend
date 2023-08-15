@@ -125,22 +125,32 @@ public class TravelService {
      * 지난 여행 조회
      */
     @Transactional(readOnly = true)
-    public List<TravelListDto> getPastTravel(GetTravelRequest getTravelRequest) {
+    public List<TravelListDto> getPastTravel(Long memberId) {
         LocalDateTime now = LocalDateTime.now();
 
-        List<Travel> pastTravels = travelRepository.findByEndDateBeforeAndMemberIdOrderByEndDateDesc(now, getTravelRequest.memberId());
+        List<Travel> pastTravels = travelRepository.findByEndDateBeforeAndMemberIdOrderByEndDateDesc(now, memberId);
 
         return pastTravels.stream()
-                .map(travel -> convertToDto(travel, isAddedToStorage(travel.getId(), getTravelRequest.memberId())))
+                .map(travel -> convertToDto(travel, isAddedToStorage(travel.getId(), memberId)))
                 .collect(Collectors.toList());
     }
 
-    // 보관함 유무 여부 판단
-    private boolean isAddedToStorage(Long travelId, Long memberId) {
-        return storageRepository.existsByMemberIdAndTravelId(memberId, travelId);
-    }
-
     private TravelListDto convertToDto(Travel travel, boolean isAddedToStorage) {
+        List<CheckList> checkLists = checkListRepository.findByTravelIdOrderByListOrderAsc(travel.getId());
+        int unfinishedItemCount = 0;
+        int finishedItemCount = 0;
+
+        for (CheckList checkList : checkLists) {
+            List<Item> items = itemRepository.findByCheckListId(checkList.getId());
+            for (Item item : items) {
+                if (item.getIsChecked()) {
+                    finishedItemCount++;
+                } else {
+                    unfinishedItemCount++;
+                }
+            }
+        }
+
         return new TravelListDto(
                 travel.getId(),
                 travel.getTitle(),
@@ -148,14 +158,21 @@ public class TravelService {
                 travel.getDestinationType(),
                 travel.getStartDate(),
                 travel.getEndDate(),
-                isAddedToStorage
+                isAddedToStorage,
+                unfinishedItemCount,
+                finishedItemCount
         );
+    }
+
+    // 보관함 유무 여부 판단
+    private boolean isAddedToStorage(Long travelId, Long memberId) {
+        return storageRepository.existsByMemberIdAndTravelId(memberId, travelId);
     }
 
     /**
      * 여행 상세 조회
      */
-    public TravelDetailDto getDetailTravel(GetTravelRequest getTravelRequest, Long travelId) {
+    public TravelDetailDto getDetailTravel(Long memberId, Long travelId) {
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
 
@@ -178,7 +195,7 @@ public class TravelService {
             checkListDtoList.add(checkListDto);
         }
 
-        Boolean isInStorage = isAddedToStorage(getTravelRequest.memberId(), travelId);
+        Boolean isInStorage = isAddedToStorage(memberId, travelId);
 
         return new TravelDetailDto(
                 travel.getTitle(),
@@ -232,4 +249,4 @@ public class TravelService {
 
         return newTravel.getId();
     }
-}
+
