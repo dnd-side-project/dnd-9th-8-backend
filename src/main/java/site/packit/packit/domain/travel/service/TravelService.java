@@ -166,10 +166,11 @@ public class TravelService {
         for (CheckList checkList : checkLists) {
             List<ItemDto> itemDtoList = itemRepository.findByCheckListIdOrderByListOrderAsc(checkList.getId())
                     .stream()
-                    .map(item -> new ItemDto(item.getTitle(), item.getListOrder(), item.getIsChecked()))
+                    .map(item -> new ItemDto(item.getId(), item.getTitle(), item.getListOrder(), item.getIsChecked()))
                     .collect(Collectors.toList());
 
             CheckListDto checkListDto = new CheckListDto(
+                    checkList.getId(),
                     checkList.getTitle(),
                     checkList.getListOrder(),
                     itemDtoList
