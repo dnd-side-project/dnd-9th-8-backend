@@ -30,8 +30,7 @@ public class MemberServiceImpl
     @Override
     public MemberDto getMember(Long memberId) {
         return MemberDto.from(
-                getMemberEntity(memberId),
-
+                getMemberEntity(memberId)
         );
     }
 
