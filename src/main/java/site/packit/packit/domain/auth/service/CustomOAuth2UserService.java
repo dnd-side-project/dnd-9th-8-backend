@@ -31,11 +31,6 @@ public class CustomOAuth2UserService
     private final MemberRepository memberRepository;
     private final MemberService memberService;
 
-    // TODO : 기획이 결정되면 기본 값 자동 주입으로 리팩토링
-    private String memberDefaultProfileImageUrl = "DEFAULT_PROFILE_IMAGE_URL";
-    private String memberDefaultNickname = "여행자";
-    private Integer memberDefaultListCheckLimitCount = 2;
-
     public CustomOAuth2UserService(
             MemberRepository memberRepository,
             MemberService memberService
@@ -103,7 +98,6 @@ public class CustomOAuth2UserService
                         userInfo.getEmail(),
                         userInfo.getName(),
                         userInfo.getProfileImageUrl(),
-                        memberDefaultListCheckLimitCount,
                         authenticationProvider
                 )
         );

@@ -8,7 +8,6 @@ public record CreateMemberDto(
         String email,
         String nickname,
         String profileImageUrl,
-        Integer listCheckLimitCount,
         AuthenticationProvider authenticationProvider
 ) {
     public static CreateMemberDto of(
@@ -16,7 +15,6 @@ public record CreateMemberDto(
             String email,
             String nickname,
             String profileImageUrl,
-            Integer listCheckLimitCount,
             AuthenticationProvider authenticationProvider
     ) {
         return new CreateMemberDto(
@@ -24,7 +22,6 @@ public record CreateMemberDto(
                 email,
                 nickname,
                 profileImageUrl,
-                listCheckLimitCount,
                 authenticationProvider
         );
     }
@@ -35,7 +32,6 @@ public record CreateMemberDto(
                 email,
                 nickname,
                 profileImageUrl,
-                listCheckLimitCount,
                 authenticationProvider
         );
     }
