@@ -36,8 +36,6 @@ public class TravelService {
 
     private final StorageRepository storageRepository;
 
-
-
     public TravelService(MemberRepository memberRepository, TravelRepository travelRepository, ItemRepository itemRepository, CheckListRepository checkListRepository, StorageRepository storageRepository) {
         this.memberRepository = memberRepository;
         this.travelRepository = travelRepository;
@@ -194,12 +192,4 @@ public class TravelService {
         );
     }
 
-    /**
-     * 특정 사용자의 여행 개수 조회
-     */
-    public Integer getTravelCount(
-            CustomUserPrincipal principal
-    ) {
-        return travelRepository.countAllByMember_Id(principal.getMemberId());
-    }
 }
