@@ -101,8 +101,8 @@ public class CustomOAuth2UserService
                 CreateMemberDto.of(
                         userInfo.getId(),
                         userInfo.getEmail(),
-                        memberDefaultNickname,
-                        memberDefaultProfileImageUrl,
+                        userInfo.getName(),
+                        userInfo.getProfileImageUrl(),
                         memberDefaultListCheckLimitCount,
                         authenticationProvider
                 )

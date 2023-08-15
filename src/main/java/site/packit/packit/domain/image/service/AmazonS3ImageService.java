@@ -23,9 +23,11 @@ public class AmazonS3ImageService
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    private static final String PROFILE_IMAGE_PATH = "profile-images";
+
     @Override
     public String uploadImage(MultipartFile image) throws IOException {
-        String storedImageName = getStoredImageName(Objects.requireNonNull(image.getOriginalFilename()));
+        String storedImageName = PROFILE_IMAGE_PATH + "/" + getStoredImageName(Objects.requireNonNull(image.getOriginalFilename()));
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(image.getSize());
