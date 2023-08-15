@@ -31,6 +31,9 @@ public class CustomOAuth2UserService
     private final MemberRepository memberRepository;
     private final MemberService memberService;
 
+    // TODO : 기획에 따라 변경
+    private static final String DEFAULT_PROFILE_IMAGE_URL ="https://dnd--pack-it.s3.ap-northeast-2.amazonaws.com/profile-images/default-profile-image.png";
+
     public CustomOAuth2UserService(
             MemberRepository memberRepository,
             MemberService memberService
@@ -97,7 +100,7 @@ public class CustomOAuth2UserService
                         userInfo.getId(),
                         userInfo.getEmail(),
                         userInfo.getName(),
-                        userInfo.getProfileImageUrl(),
+                        DEFAULT_PROFILE_IMAGE_URL,
                         authenticationProvider
                 )
         );
