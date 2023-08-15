@@ -103,12 +103,12 @@ public class TravelService {
      * 예정된 여행 조회
      */
     @Transactional(readOnly = true)
-    public List<TravelListDto> getUpcomingTravel(GetTravelRequest getTravelRequest) {
+    public List<TravelListDto> getUpcomingTravel(Long memberId) {
         LocalDateTime now = LocalDateTime.now();
-        List<Travel> upcomingTravels = travelRepository.findByStartDateAfterAndMemberIdOrderByStartDateAsc(now, getTravelRequest.memberId());
+        List<Travel> upcomingTravels = travelRepository.findByStartDateAfterAndMemberIdOrderByStartDateAsc(now, memberId);
 
         return upcomingTravels.stream()
-                .map(travel -> convertToDto(travel, isAddedToStorage(travel.getId(), getTravelRequest.memberId())))
+                .map(travel -> convertToDto(travel, isAddedToStorage(travel.getId(), memberId)))
                 .collect(Collectors.toList());
 
     }
@@ -231,14 +231,5 @@ public class TravelService {
         }
 
         return newTravel.getId();
-    }
-
-    /**
-     * 특정 사용자의 여행 개수 조회
-     */
-    public Integer getTravelCount(
-            CustomUserPrincipal principal
-    ) {
-        return travelRepository.countAllByMember_Id(principal.getMemberId());
     }
 }
