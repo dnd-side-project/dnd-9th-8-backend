@@ -57,7 +57,7 @@ public class TravelController {
     /**
      * 여행 삭제
      */
-    @DeleteMapping(value = "{travelId}/{memberId}")
+    @DeleteMapping(value = "{travelId}")
     public ResponseEntity<SuccessApiResponse> deleteTravel(
             @PathVariable Long travelId, @AuthenticationPrincipal CustomUserPrincipal principal
     ){

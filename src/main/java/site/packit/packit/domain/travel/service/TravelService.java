@@ -205,6 +205,7 @@ public class TravelService {
                     checkList.getId(),
                     checkList.getTitle(),
                     checkList.getListOrder(),
+                    checkList.getEssential(),
                     itemDtoList
             );
 
@@ -248,6 +249,7 @@ public class TravelService {
                     .title(originalCheckList.getTitle())
                     .listOrder(originalCheckList.getListOrder())
                     .travel(newTravel)
+                    .essential(originalCheckList.getEssential())
                     .build();
             checkListRepository.save(newCheckList);
 
@@ -297,6 +299,7 @@ public class TravelService {
                     checkList.getId(),
                     checkList.getTitle(),
                     checkList.getListOrder(),
+                    checkList.getEssential(),
                     itemDtoList
             );
 

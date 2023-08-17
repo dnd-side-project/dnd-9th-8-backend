@@ -9,6 +9,8 @@ public record CheckListDto(
 
         Integer order,
 
+        Boolean essential,
+
         List<ItemDto> itemDtoList
 ) {
 }
