@@ -126,4 +126,19 @@ public class TravelController {
         );
     }
 
+    /**
+     * 여행 하루 전 리마인드
+     */
+    @GetMapping(value = "remind/{travelId}")
+    public ResponseEntity<MultipleSuccessApiResponse<CheckListDto>> getRemind(
+            @PathVariable Long travelId
+    ){
+        List<CheckListDto> remindCheckList = travelService.getRemindCheckLists(travelId);
+        return ResponseEntity.ok(
+                MultipleSuccessApiResponse.of(
+                        "리마인드 목록 불러오기에 성공했습니다.", remindCheckList
+                ));
+    }
+
+
 }
