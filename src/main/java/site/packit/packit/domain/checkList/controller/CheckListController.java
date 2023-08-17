@@ -1,7 +1,9 @@
 package site.packit.packit.domain.checkList.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.domain.checkList.dto.CreateCheckListRequest;
 import site.packit.packit.domain.checkList.dto.UpdateCheckListRequest;
 import site.packit.packit.domain.checkList.service.CheckListService;
@@ -26,9 +28,9 @@ public class CheckListController {
      */
     @PostMapping(value="travels/{travelId}/check-lists")
     public ResponseEntity<SingleSuccessApiResponse<Long>> createCheckList(
-            @PathVariable Long travelId, @RequestBody CreateCheckListRequest createCheckListRequest
+            @PathVariable Long travelId, @RequestBody CreateCheckListRequest createCheckListRequest, @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Long checkListId = checkListService.createCheckList(travelId, createCheckListRequest);
+        Long checkListId = checkListService.createCheckList(travelId, createCheckListRequest, principal.getMemberId());
 
         return ResponseEntity.ok(
                 SingleSuccessApiResponse.of(
@@ -42,10 +44,10 @@ public class CheckListController {
      */
     @PatchMapping(value = "travels/{travelId}/check-lists/order")
     public ResponseEntity<SuccessApiResponse> updateCheckList(
-            @PathVariable Long travelId,@RequestBody List<UpdateCheckListRequest> updateCheckListRequests
+            @PathVariable Long travelId,@RequestBody List<UpdateCheckListRequest> updateCheckListRequests, @AuthenticationPrincipal CustomUserPrincipal principal
     ){
 
-        checkListService.updateCheckListOrder(travelId, updateCheckListRequests);
+        checkListService.updateCheckListOrder(travelId, updateCheckListRequests, principal.getMemberId());
 
         return ResponseEntity.ok(
                 SuccessApiResponse.of(
@@ -60,16 +62,15 @@ public class CheckListController {
      */
     @DeleteMapping(value = "travels/{travelId}/check-lists/{checkListId}")
     public ResponseEntity<SuccessApiResponse> deleteCheckList(
-            @PathVariable Long travelId, @PathVariable Long checkListId
+            @PathVariable Long travelId, @PathVariable Long checkListId, @AuthenticationPrincipal CustomUserPrincipal principal
     ){
-        checkListService.deleteCheckListAndReorder(travelId, checkListId);
+        checkListService.deleteCheckListAndReorder(travelId, checkListId, principal.getMemberId());
 
         return ResponseEntity.ok(
                 SuccessApiResponse.of(
                         "체크리스트 삭제가 완료되었습니다."
                 )
         );
-
     }
 
 

@@ -13,9 +13,11 @@ import site.packit.packit.domain.travel.repository.TravelRepository;
 import site.packit.packit.global.exception.ResourceNotFoundException;
 
 import java.util.List;
+import java.util.Objects;
 
 import static site.packit.packit.domain.checkList.excepiton.CheckListErrorCode.CHECKLIST_NOT_FOUND;
-import static site.packit.packit.domain.item.exception.ItemErrorCode.ITEM_NOT_FOUND;
+import static site.packit.packit.domain.item.exception.ItemErrorCode.*;
+import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_EDIT;
 import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_FOUND;
 
 @Service
@@ -34,7 +36,7 @@ public class ItemService {
      * 새로운 체크리스트 아이템 생성
      */
     @Transactional
-    public Long createCheckList(Long travelId, Long checklistId, CreateItemRequest createItemRequest) {
+    public Long createCheckList(Long travelId, Long checklistId, CreateItemRequest createItemRequest, Long memberId) {
 
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
@@ -42,6 +44,9 @@ public class ItemService {
         CheckList checkList = checkListRepository.findById(checklistId)
                 .orElseThrow(() -> new ResourceNotFoundException(CHECKLIST_NOT_FOUND));
 
+        if(!Objects.equals(travel.getMember().getId(), memberId)){
+            throw new ResourceNotFoundException(ITEM_NOT_EDIT);
+        }
 
         // 체크리스트에 속한 아이템 중 가장 큰 listOrder 값을 찾기
         Integer maxListOrder = itemRepository.findMaxListOrderByCheckList(checkList);
@@ -67,13 +72,17 @@ public class ItemService {
      * 체크리스트 아이템 순서 수정
      */
     @Transactional
-    public void updateItemOrder(Long travelId, Long checklistId, List<UpdateItemRequest> updateItemRequests) {
+    public void updateItemOrder(Long travelId, Long checklistId, List<UpdateItemRequest> updateItemRequests, Long memberId) {
 
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
 
         CheckList checkList = checkListRepository.findById(checklistId)
                 .orElseThrow(() -> new ResourceNotFoundException(CHECKLIST_NOT_FOUND));
+
+        if(!Objects.equals(travel.getMember().getId(), memberId)){
+            throw new ResourceNotFoundException(ITEM_NOT_EDIT);
+        }
 
         // checklistId로 해당 여행의 아이템들을 가져오기
         List<Item> items = itemRepository.findByCheckListId(checklistId);
@@ -95,7 +104,7 @@ public class ItemService {
      * 체크리스트 아이템 삭제
      */
     @Transactional
-    public void deleteItemAndReorder(Long travelId, Long checklistId, Long itemId){
+    public void deleteItemAndReorder(Long travelId, Long checklistId, Long itemId, Long memberId){
 
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
@@ -105,6 +114,10 @@ public class ItemService {
 
         Item deletedItem = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResourceNotFoundException(ITEM_NOT_FOUND));
+
+        if(!Objects.equals(travel.getMember().getId(), memberId)){
+            throw new ResourceNotFoundException(ITEM_NOT_DELETE);
+        }
 
         // 삭제할 아이템의 order 가져오기
         int deletedOrder = deletedItem.getListOrder();
@@ -129,7 +142,7 @@ public class ItemService {
      * 체크리스트 아이템 체크/체크 취소
      */
     @Transactional
-    public void checkItem(Long travelId, Long checkListId, Long itemId) {
+    public void checkItem(Long travelId, Long checkListId, Long itemId, Long memberId) {
 
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
@@ -137,6 +150,10 @@ public class ItemService {
                 .orElseThrow(() -> new ResourceNotFoundException(CHECKLIST_NOT_FOUND));
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResourceNotFoundException(ITEM_NOT_FOUND));
+
+        if(!Objects.equals(travel.getMember().getId(), memberId)){
+            throw new ResourceNotFoundException(ITEM_NOT_EDIT);
+        }
 
         // 아이템의 isChecked 속성 변경
         item.toggleChecked();
