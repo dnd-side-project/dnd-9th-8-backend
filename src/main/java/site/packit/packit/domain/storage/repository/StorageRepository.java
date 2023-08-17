@@ -17,4 +17,5 @@ public interface StorageRepository
     Boolean existsByMemberIdAndTravelId(Long memberId, Long travelId);
 
     Storage findByMemberIdAndTravelId(Long memberId, Long travelId);
+
 }
