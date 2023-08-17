@@ -1,7 +1,9 @@
 package site.packit.packit.domain.travel.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.domain.travel.dto.*;
 import site.packit.packit.domain.travel.service.TravelService;
 import site.packit.packit.global.response.success.MultipleSuccessApiResponse;
@@ -41,9 +43,9 @@ public class TravelController {
      */
     @PatchMapping(value = "{travelId}")
     public ResponseEntity<SingleSuccessApiResponse<Long>> updateTravel(
-            @PathVariable Long travelId, @RequestBody UpdateTravelRequest updateTravelRequest
+            @PathVariable Long travelId, @RequestBody UpdateTravelRequest updateTravelRequest, @AuthenticationPrincipal CustomUserPrincipal principal
     ){
-        travelService.updateTravel(travelId, updateTravelRequest);
+        travelService.updateTravel(principal.getMemberId(), travelId, updateTravelRequest);
 
         return ResponseEntity.ok(
                 SingleSuccessApiResponse.of(
@@ -57,9 +59,9 @@ public class TravelController {
      */
     @DeleteMapping(value = "{travelId}")
     public ResponseEntity<SuccessApiResponse> deleteTravel(
-            @PathVariable Long travelId
+            @PathVariable Long travelId, @AuthenticationPrincipal CustomUserPrincipal principal
     ){
-        travelService.deleteTravel(travelId);
+        travelService.deleteTravel(principal.getMemberId(), travelId);
 
         return ResponseEntity.ok(
                 SingleSuccessApiResponse.of(
