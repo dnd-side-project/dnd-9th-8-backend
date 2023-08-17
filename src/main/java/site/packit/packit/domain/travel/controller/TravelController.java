@@ -27,9 +27,9 @@ public class TravelController {
      */
     @PostMapping(value="")
     public ResponseEntity<SingleSuccessApiResponse<Long>> createTravel(
-            @RequestBody CreateTravelRequest createTravelRequest
+            @RequestBody CreateTravelRequest createTravelRequest, @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Long travelId = travelService.createTravel(createTravelRequest);
+        Long travelId = travelService.createTravel(principal.getMemberId(), createTravelRequest);
 
         return ResponseEntity.ok(
                 SingleSuccessApiResponse.of(
@@ -75,9 +75,9 @@ public class TravelController {
      */
     @GetMapping(value = "upcoming")
     public ResponseEntity<MultipleSuccessApiResponse<TravelListDto>> getUpcomingTravel(
-            @RequestParam Long memberId
+            @AuthenticationPrincipal CustomUserPrincipal principal
     ){
-        List<TravelListDto> upcomingTravels = travelService.getUpcomingTravel(memberId);
+        List<TravelListDto> upcomingTravels = travelService.getUpcomingTravel(principal.getMemberId());
         return ResponseEntity.ok(
                 MultipleSuccessApiResponse.of(
                         "예정된 여행 조회에 성공했습니다.", upcomingTravels
@@ -89,9 +89,9 @@ public class TravelController {
      */
     @GetMapping(value = "past")
     public ResponseEntity<MultipleSuccessApiResponse<TravelListDto>> getPastTravel(
-            @RequestParam Long memberId
+            @AuthenticationPrincipal CustomUserPrincipal principal
     ){
-        List<TravelListDto> upcomingTravels = travelService.getPastTravel(memberId);
+        List<TravelListDto> upcomingTravels = travelService.getPastTravel(principal.getMemberId());
         return ResponseEntity.ok(
                 MultipleSuccessApiResponse.of(
                         "지난 여행 조회에 성공했습니다.", upcomingTravels
@@ -103,9 +103,9 @@ public class TravelController {
      */
     @GetMapping(value = "{travelId}")
     public ResponseEntity<SingleSuccessApiResponse<TravelDetailDto>> getDetailTravel(
-            @RequestParam Long memberId, @PathVariable Long travelId
+            @AuthenticationPrincipal CustomUserPrincipal principal, @PathVariable Long travelId
     ){
-        TravelDetailDto travelDetailDto = travelService.getDetailTravel(memberId, travelId);
+        TravelDetailDto travelDetailDto = travelService.getDetailTravel(principal.getMemberId(), travelId);
         return ResponseEntity.ok(
                 SingleSuccessApiResponse.of(
                         "여행 상세 조회에 성공했습니다.", travelDetailDto
@@ -118,9 +118,9 @@ public class TravelController {
      */
     @PostMapping(value = "bring/{travelId}")
     public ResponseEntity<SingleSuccessApiResponse<Long>> bringTravel(
-            @PathVariable Long travelId, @RequestBody BringTravelRequest bringTravelRequest
+            @PathVariable Long travelId, @RequestBody BringTravelRequest bringTravelRequest, @AuthenticationPrincipal CustomUserPrincipal principal
     ){
-        Long Id = travelService.createBringTravel(travelId, bringTravelRequest);
+        Long Id = travelService.createBringTravel(travelId, bringTravelRequest, principal.getMemberId());
         return ResponseEntity.ok(
                 SingleSuccessApiResponse.of(
                         "여행 불러오기 후 생성에 성공했습니다", Id

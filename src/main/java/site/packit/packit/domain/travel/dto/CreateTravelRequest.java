@@ -6,8 +6,6 @@ import java.time.LocalDateTime;
 
 public record CreateTravelRequest(
 
-        Long memberId,
-
         String title,
 
         DestinationType destinationType,

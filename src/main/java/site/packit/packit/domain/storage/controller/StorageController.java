@@ -1,7 +1,9 @@
 package site.packit.packit.domain.storage.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.domain.storage.dto.StorageListDto;
 import site.packit.packit.domain.storage.dto.UpdateStorage;
 import site.packit.packit.domain.storage.service.StorageService;
@@ -25,9 +27,9 @@ public class StorageController {
      */
     @PostMapping("/{travelId}")
     public ResponseEntity<SuccessApiResponse> updateStorage(
-            @PathVariable Long travelId, @RequestParam Long memberId
+            @PathVariable Long travelId, @AuthenticationPrincipal CustomUserPrincipal principal
     ){
-        storageService.toggleStorage(memberId, travelId);
+        storageService.toggleStorage(principal.getMemberId(), travelId);
         return ResponseEntity.ok(
                 SuccessApiResponse.of(
                         "보관함 추가/취소에 성공했습니다."
@@ -39,9 +41,9 @@ public class StorageController {
      */
     @GetMapping("")
     public ResponseEntity<MultipleSuccessApiResponse<StorageListDto>> getStorageList(
-            @RequestParam Long memberId
+            @AuthenticationPrincipal CustomUserPrincipal principal
     ){
-        List<StorageListDto> storageList = storageService.getStorageList(memberId);
+        List<StorageListDto> storageList = storageService.getStorageList(principal.getMemberId());
 
         return ResponseEntity.ok(
                 MultipleSuccessApiResponse.of(

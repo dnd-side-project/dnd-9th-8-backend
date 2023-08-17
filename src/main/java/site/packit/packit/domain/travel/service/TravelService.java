@@ -49,13 +49,13 @@ public class TravelService {
     /**
      * 새로운 여행 생성
      */
-    public Long createTravel(CreateTravelRequest createTravelRequest) {
+    public Long createTravel(Long memberId, CreateTravelRequest createTravelRequest) {
 
-        if (!memberRepository.existsById(createTravelRequest.memberId())) {
+        if (!memberRepository.existsById(memberId)) {
             throw new ResourceNotFoundException(MEMBER_NOT_FOUND);
         }
 
-        Member member = memberRepository.findById(createTravelRequest.memberId()).get();
+        Member member = memberRepository.findById(memberId).get();
 
         Travel createTravel = Travel.builder()
                 .title(createTravelRequest.title())
@@ -221,7 +221,7 @@ public class TravelService {
     /**
      * 여행 불러오기
      */
-    public Long createBringTravel(Long travelId, BringTravelRequest bringTravelRequest) {
+    public Long createBringTravel(Long travelId, BringTravelRequest bringTravelRequest, Long memberId) {
         Travel originalTravel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
 
