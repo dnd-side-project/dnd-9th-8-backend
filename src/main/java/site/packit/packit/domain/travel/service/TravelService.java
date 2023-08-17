@@ -195,7 +195,7 @@ public class TravelService {
             checkListDtoList.add(checkListDto);
         }
 
-        Boolean isInStorage = isAddedToStorage(memberId, travelId);
+        Boolean isInStorage = isAddedToStorage(travelId, memberId);
 
         return new TravelDetailDto(
                 travel.getTitle(),
