@@ -32,15 +32,20 @@ public class CheckList
     @JsonIgnore
     private Travel travel;
 
+    @Column(columnDefinition = "TINYINT(1)")
+    private Boolean essential;
+
     @Builder
     public CheckList(
             String title,
             Integer listOrder,
-            Travel travel
+            Travel travel,
+            Boolean essential
     ) {
         this.title = title;
         this.listOrder = listOrder;
         this.travel = travel;
+        this.essential = essential;
     }
 
     public void setListOrder(

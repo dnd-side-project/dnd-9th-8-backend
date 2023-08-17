@@ -56,6 +56,7 @@ public class CheckListService {
                 .title(createCheckListRequest.title())
                 .listOrder(maxListOrder+1)
                 .travel(travel)
+                .essential(false)
                 .build();
 
         checkListRepository.save(newCheckList);
