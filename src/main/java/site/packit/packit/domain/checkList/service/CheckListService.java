@@ -15,8 +15,7 @@ import site.packit.packit.global.exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.Objects;
 
-import static site.packit.packit.domain.checkList.excepiton.CheckListErrorCode.CHECKLIST_NOT_DELETE;
-import static site.packit.packit.domain.checkList.excepiton.CheckListErrorCode.CHECKLIST_NOT_FOUND;
+import static site.packit.packit.domain.checkList.excepiton.CheckListErrorCode.*;
 import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_FOUND;
 
 @Service
@@ -43,7 +42,7 @@ public class CheckListService {
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
 
         if(!Objects.equals(travel.getMember().getId(), memberId)){
-            throw new ResourceNotFoundException(CHECKLIST_NOT_DELETE);
+            throw new ResourceNotFoundException(CHECKLIST_NOT_EDIT);
         }
 
         // travel에 속한 체크리스트 중 가장 큰 listOrder 값을 찾기
@@ -75,7 +74,7 @@ public class CheckListService {
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
 
         if(!Objects.equals(travel.getMember().getId(), memberId)){
-            throw new ResourceNotFoundException(CHECKLIST_NOT_DELETE);
+            throw new ResourceNotFoundException(CHECKLIST_NOT_EDIT);
         }
 
         // travelId로 해당 여행의 체크리스트들을 가져오기

@@ -2,7 +2,9 @@ package site.packit.packit.domain.item.controller;
 
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.domain.item.dto.CreateItemRequest;
 import site.packit.packit.domain.item.dto.UpdateItemRequest;
 import site.packit.packit.domain.item.service.ItemService;
@@ -26,9 +28,10 @@ public class ItemController {
      */
     @PostMapping(value="/travels/{travelId}/check-lists/{checklistId}/items")
     public ResponseEntity<SingleSuccessApiResponse<Long>> createCheckListItem(
-            @PathVariable Long travelId, @PathVariable Long checklistId, @RequestBody CreateItemRequest createItemRequest
+            @PathVariable Long travelId, @PathVariable Long checklistId,
+            @RequestBody CreateItemRequest createItemRequest, @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Long itemId = itemService.createCheckList(travelId, checklistId, createItemRequest);
+        Long itemId = itemService.createCheckList(travelId, checklistId, createItemRequest, principal.getMemberId());
 
         return ResponseEntity.ok(
                 SingleSuccessApiResponse.of(
@@ -42,9 +45,10 @@ public class ItemController {
      */
     @PatchMapping(value = "travels/{travelId}/check-lists/{checklistId}/items/order")
     public ResponseEntity<SuccessApiResponse> updateCheckListItem(
-            @PathVariable Long travelId, @PathVariable Long checklistId, @RequestBody List<UpdateItemRequest> updateItemRequests
+            @PathVariable Long travelId, @PathVariable Long checklistId,
+            @RequestBody List<UpdateItemRequest> updateItemRequests, @AuthenticationPrincipal CustomUserPrincipal principal
     ){
-        itemService.updateItemOrder(travelId, checklistId, updateItemRequests);
+        itemService.updateItemOrder(travelId, checklistId, updateItemRequests, principal.getMemberId());
 
         return ResponseEntity.ok(
                 SuccessApiResponse.of(
@@ -59,9 +63,10 @@ public class ItemController {
      */
     @DeleteMapping(value = "travels/{travelId}/check-lists/{checkListId}/items/{itemId}")
     public ResponseEntity<SuccessApiResponse> deleteCheckListItem(
-            @PathVariable Long travelId, @PathVariable Long checkListId, @PathVariable Long itemId
+            @PathVariable Long travelId, @PathVariable Long checkListId,
+            @PathVariable Long itemId, @AuthenticationPrincipal CustomUserPrincipal principal
     ){
-        itemService.deleteItemAndReorder(travelId, checkListId, itemId);
+        itemService.deleteItemAndReorder(travelId, checkListId, itemId, principal.getMemberId());
 
         return ResponseEntity.ok(
                 SuccessApiResponse.of(
@@ -75,9 +80,10 @@ public class ItemController {
      */
     @PatchMapping(value = "travels/{travelId}/check-lists/{checkListId}/items/{itemId}")
     public ResponseEntity<SuccessApiResponse> checkItem(
-            @PathVariable Long travelId, @PathVariable Long checkListId, @PathVariable Long itemId
+            @PathVariable Long travelId, @PathVariable Long checkListId,
+            @PathVariable Long itemId, @AuthenticationPrincipal CustomUserPrincipal principal
     ){
-        itemService.checkItem(travelId, checkListId, itemId);
+        itemService.checkItem(travelId, checkListId, itemId, principal.getMemberId());
 
         return ResponseEntity.ok(
                 SuccessApiResponse.of(
