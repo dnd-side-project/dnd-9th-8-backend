@@ -20,9 +20,11 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static site.packit.packit.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
+import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_EDIT;
 import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_FOUND;
 
 @Service
@@ -47,13 +49,13 @@ public class TravelService {
     /**
      * 새로운 여행 생성
      */
-    public Long createTravel(CreateTravelRequest createTravelRequest) {
+    public Long createTravel(Long memberId, CreateTravelRequest createTravelRequest) {
 
-        if (!memberRepository.existsById(createTravelRequest.memberId())) {
+        if (!memberRepository.existsById(memberId)) {
             throw new ResourceNotFoundException(MEMBER_NOT_FOUND);
         }
 
-        Member member = memberRepository.findById(createTravelRequest.memberId()).get();
+        Member member = memberRepository.findById(memberId).get();
 
         Travel createTravel = Travel.builder()
                 .title(createTravelRequest.title())
@@ -71,10 +73,14 @@ public class TravelService {
      * 여행 수정
      */
     @Transactional
-    public void updateTravel(Long travelId, UpdateTravelRequest updateTravelRequest) {
+    public void updateTravel(Long memberId, Long travelId, UpdateTravelRequest updateTravelRequest) {
 
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+
+        if(!Objects.equals(travel.getMember().getId(), memberId)){
+            throw new ResourceNotFoundException(TRAVEL_NOT_EDIT);
+        }
 
         travel.updateTravel(updateTravelRequest.title(), updateTravelRequest.startDate(), updateTravelRequest.endDate());
     }
@@ -83,10 +89,14 @@ public class TravelService {
      * 여행 삭제
      */
     @Transactional
-    public void deleteTravel(Long travelId) {
+    public void deleteTravel(Long memberId, Long travelId) {
 
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+
+        if(!Objects.equals(travel.getMember().getId(), memberId)){
+            throw new ResourceNotFoundException(TRAVEL_NOT_EDIT);
+        }
 
         List<CheckList> checkListsToDelete = checkListRepository.findByTravelId(travelId);
         for (CheckList checkList : checkListsToDelete) {
@@ -211,7 +221,7 @@ public class TravelService {
     /**
      * 여행 불러오기
      */
-    public Long createBringTravel(Long travelId, BringTravelRequest bringTravelRequest) {
+    public Long createBringTravel(Long travelId, BringTravelRequest bringTravelRequest, Long memberId) {
         Travel originalTravel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
 

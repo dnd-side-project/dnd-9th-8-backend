@@ -9,7 +9,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Getter
 public enum TravelErrorCode implements ErrorCode {
 
-    TRAVEL_NOT_FOUND("TR-C-001", NOT_FOUND, "존재하지 않는 여행입니다.");
+    TRAVEL_NOT_FOUND("TR-C-001", NOT_FOUND, "존재하지 않는 여행입니다."),
+    TRAVEL_NOT_EDIT("TR-C-002", NOT_FOUND, "사용자가 생성한 여행이 아닙니다.");
 
     private final String code;
     private final HttpStatus httpStatus;
