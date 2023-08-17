@@ -195,7 +195,7 @@ public class TravelService {
             checkListDtoList.add(checkListDto);
         }
 
-        Boolean isInStorage = isAddedToStorage(memberId, travelId);
+        Boolean isInStorage = isAddedToStorage(travelId, memberId);
 
         return new TravelDetailDto(
                 travel.getTitle(),
@@ -258,4 +258,36 @@ public class TravelService {
     ) {
         return travelRepository.countAllByMember_Id(principal.getMemberId());
     }
+
+    /**
+     * 여행 하루 전 리마인드
+     */
+    public List<CheckListDto> getRemindCheckLists(
+            Long travelId
+    ){
+        Travel travel = travelRepository.findById(travelId)
+                .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+
+        List<CheckList> checkLists = checkListRepository.findByTravelIdOrderByListOrderAsc(travelId);
+
+        List<CheckListDto> checkListDtoList = new ArrayList<>();
+        for (CheckList checkList : checkLists) {
+            List<ItemDto> itemDtoList = itemRepository.findByCheckListIdOrderByListOrderAsc(checkList.getId())
+                    .stream()
+                    .map(item -> new ItemDto(item.getId(), item.getTitle(), item.getListOrder(), false))
+                    .collect(Collectors.toList());
+
+            CheckListDto checkListDto = new CheckListDto(
+                    checkList.getId(),
+                    checkList.getTitle(),
+                    checkList.getListOrder(),
+                    itemDtoList
+            );
+
+            checkListDtoList.add(checkListDto);
+        }
+
+        return checkListDtoList;
+    }
+
 }
