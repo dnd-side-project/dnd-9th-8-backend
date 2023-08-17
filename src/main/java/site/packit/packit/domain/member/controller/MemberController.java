@@ -3,7 +3,6 @@ package site.packit.packit.domain.member.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.domain.image.service.ImageService;
 import site.packit.packit.domain.member.dto.ChangeNicknameRequest;
@@ -12,8 +11,6 @@ import site.packit.packit.domain.member.service.MemberService;
 import site.packit.packit.domain.travel.service.TravelService;
 import site.packit.packit.global.response.success.SingleSuccessApiResponse;
 import site.packit.packit.global.response.success.SuccessApiResponse;
-
-import java.io.IOException;
 
 @RequestMapping("/api/members")
 @RestController
@@ -68,13 +65,12 @@ public class MemberController {
     @PutMapping("/profile-images")
     public ResponseEntity<SuccessApiResponse> updateMemberProfileImage(
             @AuthenticationPrincipal CustomUserPrincipal principal,
-            MultipartFile image
-    ) throws IOException {
+            @RequestBody String profileImageUrl
+    ) {
         memberService.updateMemberProfileImageUrl(
                 principal.getMemberId(),
-                imageService.uploadImage(image)
+                profileImageUrl
         );
-
         return ResponseEntity.ok(
                 SuccessApiResponse.of(
                         "성공적으로 프로필이미지가 변경되었습니다."
