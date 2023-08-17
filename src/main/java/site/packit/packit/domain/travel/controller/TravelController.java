@@ -57,12 +57,11 @@ public class TravelController {
     /**
      * 여행 삭제
      */
-    @DeleteMapping(value = "{travelId}")
+    @DeleteMapping(value = "{travelId}/{memberId}")
     public ResponseEntity<SuccessApiResponse> deleteTravel(
             @PathVariable Long travelId, @AuthenticationPrincipal CustomUserPrincipal principal
     ){
         travelService.deleteTravel(principal.getMemberId(), travelId);
-
         return ResponseEntity.ok(
                 SingleSuccessApiResponse.of(
                         "여행 삭제에 성공했습니다."

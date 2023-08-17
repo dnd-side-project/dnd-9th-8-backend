@@ -9,6 +9,7 @@ import site.packit.packit.domain.item.entity.Item;
 import site.packit.packit.domain.item.repository.ItemRepository;
 import site.packit.packit.domain.member.entity.Member;
 import site.packit.packit.domain.member.repository.MemberRepository;
+import site.packit.packit.domain.storage.entity.Storage;
 import site.packit.packit.domain.storage.repository.StorageRepository;
 import site.packit.packit.domain.travel.dto.*;
 import site.packit.packit.domain.travel.entity.Travel;
@@ -105,6 +106,11 @@ public class TravelService {
             itemRepository.deleteAll(itemsToDelete);
         }
         checkListRepository.deleteAll(checkListsToDelete);
+
+        if(isAddedToStorage(travel.getId(), memberId)){
+            Storage storage = storageRepository.findByMemberIdAndTravelId(memberId,travelId);
+            storageRepository.delete(storage);
+        }
 
         travelRepository.delete(travel);
     }
