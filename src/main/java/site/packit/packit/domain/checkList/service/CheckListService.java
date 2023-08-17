@@ -13,7 +13,9 @@ import site.packit.packit.domain.travel.repository.TravelRepository;
 import site.packit.packit.global.exception.ResourceNotFoundException;
 
 import java.util.List;
+import java.util.Objects;
 
+import static site.packit.packit.domain.checkList.excepiton.CheckListErrorCode.CHECKLIST_NOT_DELETE;
 import static site.packit.packit.domain.checkList.excepiton.CheckListErrorCode.CHECKLIST_NOT_FOUND;
 import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_FOUND;
 
@@ -35,10 +37,14 @@ public class CheckListService {
      * 새로운 체크리스트 생성
      */
     @Transactional
-    public Long createCheckList(Long travelId, CreateCheckListRequest createCheckListRequest){
+    public Long createCheckList(Long travelId, CreateCheckListRequest createCheckListRequest, Long memberId){
 
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+
+        if(!Objects.equals(travel.getMember().getId(), memberId)){
+            throw new ResourceNotFoundException(CHECKLIST_NOT_DELETE);
+        }
 
         // travel에 속한 체크리스트 중 가장 큰 listOrder 값을 찾기
         Integer maxListOrder = checkListRepository.findMaxListOrderByTravel(travel);
@@ -63,10 +69,14 @@ public class CheckListService {
      * 체크리스트 순서 수정
      */
     @Transactional
-    public void updateCheckListOrder(Long travelId, List<UpdateCheckListRequest> updateCheckListRequests){
+    public void updateCheckListOrder(Long travelId, List<UpdateCheckListRequest> updateCheckListRequests, Long memberId){
 
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+
+        if(!Objects.equals(travel.getMember().getId(), memberId)){
+            throw new ResourceNotFoundException(CHECKLIST_NOT_DELETE);
+        }
 
         // travelId로 해당 여행의 체크리스트들을 가져오기
         List<CheckList> checkLists = checkListRepository.findByTravelId(travelId);
@@ -89,13 +99,17 @@ public class CheckListService {
      * 체크리스트 삭제
      */
     @Transactional
-    public void deleteCheckListAndReorder(Long travelId, Long checklistId) {
+    public void deleteCheckListAndReorder(Long travelId, Long checklistId, Long memberId) {
 
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
 
         CheckList deletedCheckList = checkListRepository.findById(checklistId)
                 .orElseThrow(() -> new ResourceNotFoundException(CHECKLIST_NOT_FOUND));
+
+        if(!Objects.equals(travel.getMember().getId(), memberId)){
+            throw new ResourceNotFoundException(CHECKLIST_NOT_DELETE);
+        }
 
         // 삭제할 체크리스트의 order 가져오기
         int deletedOrder = deletedCheckList.getListOrder();
