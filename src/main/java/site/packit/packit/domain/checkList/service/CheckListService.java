@@ -150,7 +150,7 @@ public class CheckListService {
                 .orElseThrow(()-> new ResourceNotFoundException(CHECKLIST_NOT_FOUND));
 
         if(!Objects.equals(travel.getMember().getId(), memberId)){
-            throw new ResourceNotFoundException(TRAVEL_NOT_EDIT);
+            throw new ResourceNotFoundException(CHECKLIST_NOT_EDIT);
         }
 
         checkList.updateListTitle(updateListTitleRequest.title());

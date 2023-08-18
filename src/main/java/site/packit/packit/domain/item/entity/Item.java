@@ -61,4 +61,10 @@ public class Item
         this.isChecked = !this.isChecked;
     }
 
+    public void updateItemTitle(
+            String title
+    ){
+        this.title = title;
+    }
+
 }

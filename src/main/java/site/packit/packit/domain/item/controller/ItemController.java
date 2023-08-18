@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.domain.item.dto.CreateItemRequest;
 import site.packit.packit.domain.item.dto.UpdateItemRequest;
+import site.packit.packit.domain.item.dto.UpdateItemTitleRequest;
 import site.packit.packit.domain.item.service.ItemService;
 import site.packit.packit.global.response.success.SingleSuccessApiResponse;
 import site.packit.packit.global.response.success.SuccessApiResponse;
@@ -88,6 +89,24 @@ public class ItemController {
         return ResponseEntity.ok(
                 SuccessApiResponse.of(
                         "아이템 체크&체크 취소가 완료되었습니다."
+                )
+        );
+    }
+
+    /**
+     * 체크리스트 아이템 항목 수정
+     */
+    @PatchMapping(value = "travels/{travelId}/check-lists/{checkListId}/items/{itemId}/title")
+    public ResponseEntity<SuccessApiResponse> modifyItem(
+            @PathVariable Long travelId, @PathVariable Long checkListId,
+            @PathVariable Long itemId, @RequestBody UpdateItemTitleRequest updateItemTitleRequest,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ){
+        itemService.updateItemTitle(travelId, checkListId, itemId, principal.getMemberId(), updateItemTitleRequest);
+
+        return ResponseEntity.ok(
+                SuccessApiResponse.of(
+                        "아이템 항목 수정이 완료되었습니다."
                 )
         );
     }
