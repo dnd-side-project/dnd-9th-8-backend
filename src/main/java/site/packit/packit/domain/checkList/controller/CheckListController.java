@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.domain.checkList.dto.CreateCheckListRequest;
 import site.packit.packit.domain.checkList.dto.UpdateCheckListRequest;
+import site.packit.packit.domain.checkList.dto.UpdateListTitleRequest;
 import site.packit.packit.domain.checkList.service.CheckListService;
 import site.packit.packit.global.response.success.SingleSuccessApiResponse;
 import site.packit.packit.global.response.success.SuccessApiResponse;
@@ -71,6 +72,25 @@ public class CheckListController {
                         "체크리스트 삭제가 완료되었습니다."
                 )
         );
+    }
+
+    /**
+     * 체크리스트 항목 수정
+     */
+    @PatchMapping(value = "travels/{travelId}/check-lists/{checkListId}")
+    public ResponseEntity<SuccessApiResponse> modifyCheckList(
+            @PathVariable Long travelId, @PathVariable Long checkListId,
+            @RequestBody UpdateListTitleRequest updateListTitleRequest, @AuthenticationPrincipal CustomUserPrincipal principal
+    ){
+
+        checkListService.updateCheckListTitle(travelId, checkListId, updateListTitleRequest, principal.getMemberId());
+
+        return ResponseEntity.ok(
+                SuccessApiResponse.of(
+                        "체크리스트 항목 수정이 완료되었습니다."
+                )
+        );
+
     }
 
 
