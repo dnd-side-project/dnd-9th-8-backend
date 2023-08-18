@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import site.packit.packit.domain.travel.entity.Travel;
 import site.packit.packit.global.audit.BaseEntity;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "checklist")
@@ -52,5 +54,11 @@ public class CheckList
             Integer listOrder
     ) {
         this.listOrder = listOrder;
+    }
+
+    public void updateListTitle(
+            String title
+    ) {
+        this.title = title;
     }
 }

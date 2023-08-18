@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.packit.packit.domain.checkList.dto.CreateCheckListRequest;
 import site.packit.packit.domain.checkList.dto.UpdateCheckListRequest;
+import site.packit.packit.domain.checkList.dto.UpdateListTitleRequest;
 import site.packit.packit.domain.checkList.entity.CheckList;
 import site.packit.packit.domain.checkList.repository.CheckListRepository;
 import site.packit.packit.domain.item.entity.Item;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static site.packit.packit.domain.checkList.excepiton.CheckListErrorCode.*;
+import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_EDIT;
 import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_FOUND;
 
 @Service
@@ -133,5 +135,25 @@ public class CheckListService {
 
         // 체크리스트 삭제
         checkListRepository.delete(deletedCheckList);
+    }
+
+    /**
+     * 체크리스트 항목 수정
+     */
+    @Transactional
+    public void updateCheckListTitle(Long travelId, Long checkListId, UpdateListTitleRequest updateListTitleRequest, Long memberId){
+
+        Travel travel = travelRepository.findById(travelId)
+                .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+
+        CheckList checkList = checkListRepository.findById(checkListId)
+                .orElseThrow(()-> new ResourceNotFoundException(CHECKLIST_NOT_FOUND));
+
+        if(!Objects.equals(travel.getMember().getId(), memberId)){
+            throw new ResourceNotFoundException(CHECKLIST_NOT_EDIT);
+        }
+
+        checkList.updateListTitle(updateListTitleRequest.title());
+
     }
 }

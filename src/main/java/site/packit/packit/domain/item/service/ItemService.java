@@ -6,6 +6,7 @@ import site.packit.packit.domain.checkList.entity.CheckList;
 import site.packit.packit.domain.checkList.repository.CheckListRepository;
 import site.packit.packit.domain.item.dto.CreateItemRequest;
 import site.packit.packit.domain.item.dto.UpdateItemRequest;
+import site.packit.packit.domain.item.dto.UpdateItemTitleRequest;
 import site.packit.packit.domain.item.entity.Item;
 import site.packit.packit.domain.item.repository.ItemRepository;
 import site.packit.packit.domain.travel.entity.Travel;
@@ -159,5 +160,28 @@ public class ItemService {
         item.toggleChecked();
 
         itemRepository.save(item);
+    }
+
+    /**
+     * 체크리스트 아이템 항목 수정
+     */
+    @Transactional
+    public void updateItemTitle(Long travelId, Long checkListId, Long itemId, Long memberId, UpdateItemTitleRequest updateItemTitleRequest) {
+
+        Travel travel = travelRepository.findById(travelId)
+                .orElseThrow(() -> new ResourceNotFoundException(TRAVEL_NOT_FOUND));
+        CheckList checkList = checkListRepository.findById(checkListId)
+                .orElseThrow(() -> new ResourceNotFoundException(CHECKLIST_NOT_FOUND));
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException(ITEM_NOT_FOUND));
+
+        if(!Objects.equals(travel.getMember().getId(), memberId)){
+            throw new ResourceNotFoundException(ITEM_NOT_EDIT);
+        }
+
+        item.updateItemTitle(updateItemTitleRequest.title());
+
+
+
     }
 }
