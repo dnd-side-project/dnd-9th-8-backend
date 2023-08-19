@@ -215,6 +215,7 @@ public class TravelService {
         Boolean isInStorage = isAddedToStorage(travelId, memberId);
 
         return new TravelDetailDto(
+                travel.getId(),
                 travel.getTitle(),
                 calculateDDay(travel.getStartDate()),
                 travel.getDestinationType(),
