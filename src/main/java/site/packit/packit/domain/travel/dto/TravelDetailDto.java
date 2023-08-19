@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record TravelDetailDto(
+        Long travelId,
+
         String title,
 
         String dDay,
