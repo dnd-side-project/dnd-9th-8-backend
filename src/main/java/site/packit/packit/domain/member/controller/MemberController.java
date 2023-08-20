@@ -7,6 +7,7 @@ import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.domain.image.service.ImageService;
 import site.packit.packit.domain.member.dto.ChangeNicknameRequest;
 import site.packit.packit.domain.member.dto.MemberWithTravelCountDto;
+import site.packit.packit.domain.member.dto.UpdateMemberRequest;
 import site.packit.packit.domain.member.service.MemberService;
 import site.packit.packit.domain.travel.service.TravelService;
 import site.packit.packit.global.response.success.SingleSuccessApiResponse;
@@ -74,6 +75,20 @@ public class MemberController {
         return ResponseEntity.ok(
                 SuccessApiResponse.of(
                         "성공적으로 프로필이미지가 변경되었습니다."
+                )
+        );
+    }
+
+    @PatchMapping
+    public ResponseEntity<SuccessApiResponse> updateMember(
+            @AuthenticationPrincipal CustomUserPrincipal principal,
+            @RequestBody UpdateMemberRequest request
+    ) {
+        memberService.updateMemberNickname(principal.getMemberId(), request.nickname());
+        memberService.updateMemberProfileImageUrl(principal.getMemberId(), request.image());
+        return ResponseEntity.ok(
+                SuccessApiResponse.of(
+                        "성공적으로 회원정보가 변경되었습니다."
                 )
         );
     }
