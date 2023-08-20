@@ -32,7 +32,7 @@ public class CustomOAuth2UserService
     private final MemberService memberService;
 
     // TODO : 기획에 따라 변경
-    private static final String DEFAULT_PROFILE_IMAGE_URL ="https://dnd--pack-it.s3.ap-northeast-2.amazonaws.com/profile-images/default-profile-image.png";
+    private static final String DEFAULT_PROFILE_IMAGE_URL ="https://dnd--pack-it.s3.ap-northeast-2.amazonaws.com/profile-images/1.svg";
 
     public CustomOAuth2UserService(
             MemberRepository memberRepository,
