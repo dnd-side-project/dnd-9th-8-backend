@@ -1,5 +1,6 @@
 package site.packit.packit.domain.auth.service;
 
+import jakarta.servlet.ServletRequest;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,6 +10,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import site.packit.packit.domain.auth.constant.AuthenticationProvider;
+import site.packit.packit.domain.auth.constant.LoginMemberStatus;
+import site.packit.packit.domain.auth.dto.LoginMemberStatusDto;
 import site.packit.packit.domain.auth.exception.OAuth2ProviderMisMatchException;
 import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.domain.auth.info.oauth2.OAuth2UserInfo;
@@ -28,18 +31,23 @@ import static site.packit.packit.domain.member.exception.MemberErrorCode.MEMBER_
 public class CustomOAuth2UserService
         extends DefaultOAuth2UserService {
 
+    private final LoginMemberStatusDto loginMemberStatusDto;
     private final MemberRepository memberRepository;
     private final MemberService memberService;
+    private final ServletRequest request;
 
-    // TODO : 기획에 따라 변경
-    private static final String DEFAULT_PROFILE_IMAGE_URL ="https://dnd--pack-it.s3.ap-northeast-2.amazonaws.com/profile-images/1.svg";
+    private static final String DEFAULT_PROFILE_IMAGE_URL = "https://dnd--pack-it.s3.ap-northeast-2.amazonaws.com/profile-images/1.svg";
 
     public CustomOAuth2UserService(
+            LoginMemberStatusDto loginMemberStatusDto,
             MemberRepository memberRepository,
-            MemberService memberService
+            MemberService memberService,
+            ServletRequest request
     ) {
+        this.loginMemberStatusDto = loginMemberStatusDto;
         this.memberRepository = memberRepository;
         this.memberService = memberService;
+        this.request = request;
     }
 
     @Override
@@ -74,6 +82,7 @@ public class CustomOAuth2UserService
                 oAuth2User.getAttributes()
         );
 
+        request.setAttribute("memberStatus", LoginMemberStatus.EXISTING_MEMBER);
         // 최초 로그인일 경우 회원 등록
         Member member = memberRepository.findByPersonalId(oAuth2UserInfo.getId())
                 .orElseGet(() -> register(oAuth2UserInfo, authenticationProvider));
@@ -104,6 +113,8 @@ public class CustomOAuth2UserService
                         authenticationProvider
                 )
         );
+
+        request.setAttribute("memberStatus", LoginMemberStatus.NEW_MEMBER);
 
         return memberRepository.findById(createdMemberId)
                 .orElseThrow(() -> new ResourceNotFoundException(MEMBER_NOT_FOUND));

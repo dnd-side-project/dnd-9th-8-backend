@@ -67,6 +67,8 @@ public class CustomOAuth2AuthenticationSuccessHandler
     ) throws IOException, ServletException {
         String targetUrl = determineTargetUrl(request, response, authentication);
 
+        System.out.println("request = " + request.getAttribute("memberStatus"));
+
         // 응답 커밋 여부 체크
         if (response.isCommitted()) {
             logger.debug("응답이 이미 커밋되었으므로 [\" + targetUrl + \"]로 리다이렉션 할 수 없습니다.");
@@ -140,6 +142,7 @@ public class CustomOAuth2AuthenticationSuccessHandler
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", accessToken.getValue())
+                .queryParam("member-status", request.getAttribute("memberStatus"))
                 .build()
                 .toUriString();
     }
