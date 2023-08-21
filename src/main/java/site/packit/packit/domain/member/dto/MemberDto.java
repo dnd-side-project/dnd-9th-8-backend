@@ -6,20 +6,23 @@ public record MemberDto(
         Long memberId,
         String email,
         String nickname,
-        String profileImageUrl
+        String profileImageUrl,
+        Boolean isEmailAuthorized
 ) {
 
     public static MemberDto of(
             Long memberId,
             String email,
             String nickname,
-            String profileImageUrl
+            String profileImageUrl,
+            Boolean isEmailAuthorized
     ) {
         return new MemberDto(
                 memberId,
                 email,
                 nickname,
-                profileImageUrl
+                profileImageUrl,
+                isEmailAuthorized
         );
     }
 
@@ -28,7 +31,8 @@ public record MemberDto(
                 member.getId(),
                 member.getEmail(),
                 member.getNickname(),
-                member.getProfileImageUrl()
+                member.getProfileImageUrl(),
+                member.getIsEmailAuthorized()
         );
     }
 }

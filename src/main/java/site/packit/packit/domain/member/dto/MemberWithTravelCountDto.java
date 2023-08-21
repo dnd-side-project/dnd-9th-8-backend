@@ -3,13 +3,16 @@ package site.packit.packit.domain.member.dto;
 public record MemberWithTravelCountDto(
         Long memberId,
         String email,
+        Boolean isEmailAuthorized,
         String nickname,
         String profileImageUrl,
+
         Integer travelCount
 ) {
     public static MemberWithTravelCountDto of(
             Long memberId,
             String email,
+            Boolean isEmailAuthorized,
             String nickname,
             String profileImageUrl,
             Integer travelCount
@@ -17,6 +20,7 @@ public record MemberWithTravelCountDto(
         return new MemberWithTravelCountDto(
                 memberId,
                 email,
+                isEmailAuthorized,
                 nickname,
                 profileImageUrl,
                 travelCount
@@ -30,6 +34,7 @@ public record MemberWithTravelCountDto(
         return new MemberWithTravelCountDto(
                 member.memberId(),
                 member.email(),
+                member.isEmailAuthorized(),
                 member.nickname(),
                 member.profileImageUrl(),
                 travelCount

@@ -180,6 +180,8 @@ gradle-app.setting
 src/main/resources/application-dev.yml
 # prod
 src/main/resources/application-prod.yml
+# email
+src/main/resources/email.properties
 
 ### Dev File
 src/main/java/site/packit/packit/dev/**

@@ -35,6 +35,9 @@ public class Member
     @Column(length = 1000, nullable = false)
     private String profileImageUrl;
 
+    @Column(nullable = false)
+    private Boolean isEmailAuthorized = false;
+
     @Enumerated(EnumType.STRING)
     @Column(length = 50, nullable = false)
     private MemberStatus status = ACTIVE;
@@ -86,5 +89,13 @@ public class Member
 
     public void updateProfileImageUrl(String newProfileImageUrl) {
         this.profileImageUrl = newProfileImageUrl;
+    }
+
+    public void emailAuthorized() {
+        this.isEmailAuthorized = true;
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
     }
 }
