@@ -19,23 +19,30 @@ public class EmailAuthenticationCode
     @Column(length = 10000, nullable = false, unique = true)
     private String value;
 
+    @Column(length = 100, nullable = false)
+    private String email;
+
     @Column(nullable = false)
     private Long memberId;
 
     private EmailAuthenticationCode(
             String value,
+            String email,
             Long memberId
     ) {
         this.value = value;
+        this.email = email;
         this.memberId = memberId;
     }
 
     public static EmailAuthenticationCode of(
             String code,
+            String email,
             Long memberId
     ) {
         return new EmailAuthenticationCode(
                 code,
+                email,
                 memberId
         );
     }

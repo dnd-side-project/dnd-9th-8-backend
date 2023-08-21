@@ -17,6 +17,7 @@ import site.packit.packit.global.exception.ResourceNotFoundException;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -59,7 +60,7 @@ public class EmailServiceImpl
 
         MimeMessage message = createMessage(
                 to,
-                generateAuthenticationLink(memberId)
+                generateAuthenticationLink(to, memberId)
         );
 
         try {
@@ -98,7 +99,7 @@ public class EmailServiceImpl
         return message;
     }
 
-    private String generateAuthenticationLink(Long memberId) {
+    private String generateAuthenticationLink(String email, Long memberId) {
         StringBuffer key = new StringBuffer();
         String uuid = UUID.randomUUID().toString();
         Random rnd = new Random();
@@ -125,7 +126,7 @@ public class EmailServiceImpl
 
         code = uuid + "-" + key.toString();
 
-        saveAuthenticationCode(code, memberId);
+        saveAuthenticationCode(code, email, memberId);
 
         return EMAIL_AUTHENTICATION_URL + code;
     }
@@ -133,11 +134,13 @@ public class EmailServiceImpl
     @Transactional
     public void saveAuthenticationCode(
             String code,
+            String email,
             Long memberId
     ) {
         emailAuthenticationCodeRepository.save(
                 EmailAuthenticationCode.of(
                         code,
+                        email,
                         memberId
                 )
         );
@@ -150,15 +153,16 @@ public class EmailServiceImpl
         EmailAuthenticationCode emailAuthenticationCode = emailAuthenticationCodeRepository.findByValue(authenticationCode)
                 .orElseThrow(() -> new EmailAuthenticationException(INVALID_AUTHENTICATION_CODE));
 
-        checkCodeTime(emailAuthenticationCode.getCreatedAt());
+        checkExpiredCode(emailAuthenticationCode.getCreatedAt());
 
         Member member = memberRepository.getReferenceById(emailAuthenticationCode.getMemberId());
         member.emailAuthorized();
+        memberEmailUpdate(member, emailAuthenticationCode.getEmail());
 
         emailAuthenticationCodeRepository.delete(emailAuthenticationCode);
     }
 
-    private void checkCodeTime(LocalDateTime codeCreateTime) {
+    private void checkExpiredCode(LocalDateTime codeCreateTime) {
         long betweenMinute = ChronoUnit.SECONDS.between(codeCreateTime, LocalDateTime.now());
         if (betweenMinute > 600) {
             throw new EmailAuthenticationException(EXPIRED_AUTHENTICATION_CODE);
@@ -174,5 +178,11 @@ public class EmailServiceImpl
     private Member getMemberEntity(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new ResourceNotFoundException(MEMBER_NOT_FOUND));
+    }
+
+    public void memberEmailUpdate(Member member, String email) {
+        if (!Objects.equals(member.getEmail(), email)) {
+            member.changeEmail(email);
+        }
     }
 }
