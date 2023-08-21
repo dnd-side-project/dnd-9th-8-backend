@@ -11,7 +11,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import site.packit.packit.domain.auth.constant.AuthenticationProvider;
 import site.packit.packit.domain.auth.constant.LoginMemberStatus;
-import site.packit.packit.domain.auth.dto.LoginMemberStatusDto;
 import site.packit.packit.domain.auth.exception.OAuth2ProviderMisMatchException;
 import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.domain.auth.info.oauth2.OAuth2UserInfo;
@@ -31,7 +30,6 @@ import static site.packit.packit.domain.member.exception.MemberErrorCode.MEMBER_
 public class CustomOAuth2UserService
         extends DefaultOAuth2UserService {
 
-    private final LoginMemberStatusDto loginMemberStatusDto;
     private final MemberRepository memberRepository;
     private final MemberService memberService;
     private final ServletRequest request;
@@ -39,12 +37,10 @@ public class CustomOAuth2UserService
     private static final String DEFAULT_PROFILE_IMAGE_URL = "https://dnd--pack-it.s3.ap-northeast-2.amazonaws.com/profile-images/1.svg";
 
     public CustomOAuth2UserService(
-            LoginMemberStatusDto loginMemberStatusDto,
             MemberRepository memberRepository,
             MemberService memberService,
             ServletRequest request
     ) {
-        this.loginMemberStatusDto = loginMemberStatusDto;
         this.memberRepository = memberRepository;
         this.memberService = memberService;
         this.request = request;
