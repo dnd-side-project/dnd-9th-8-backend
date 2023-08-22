@@ -22,10 +22,9 @@ public class EmailController {
 
     @PostMapping("/api/authentication-email")
     public ResponseEntity<SuccessApiResponse> getEmailAuthenticationCode(
-            @AuthenticationPrincipal CustomUserPrincipal principal,
-            @RequestBody EmailAuthenticationRequest request
+            @AuthenticationPrincipal CustomUserPrincipal principal
     ) throws Exception {
-        emailService.sendSimpleMessage(request.email(), principal.getMemberId());
+        emailService.sendSimpleMessage(principal.getMemberId());
 
         return ResponseEntity.ok(
                 SuccessApiResponse.of(

@@ -95,7 +95,4 @@ public class Member
         this.isEmailAuthorized = true;
     }
 
-    public void changeEmail(String email) {
-        this.email = email;
-    }
 }
