@@ -17,7 +17,6 @@ import site.packit.packit.global.exception.ResourceNotFoundException;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -49,7 +48,6 @@ public class EmailServiceImpl
     @Transactional
     @Override
     public void sendSimpleMessage(
-            String to,
             Long memberId
     ) throws Exception {
 
@@ -59,8 +57,8 @@ public class EmailServiceImpl
         emailAuthenticationCodeRepository.deleteAllByMemberId(memberId);
 
         MimeMessage message = createMessage(
-                to,
-                generateAuthenticationLink(to, memberId)
+                member.getEmail(),
+                generateAuthenticationLink(member.getEmail(), memberId)
         );
 
         try {
@@ -157,7 +155,6 @@ public class EmailServiceImpl
 
         Member member = memberRepository.getReferenceById(emailAuthenticationCode.getMemberId());
         member.emailAuthorized();
-        memberEmailUpdate(member, emailAuthenticationCode.getEmail());
 
         emailAuthenticationCodeRepository.delete(emailAuthenticationCode);
     }
@@ -178,11 +175,5 @@ public class EmailServiceImpl
     private Member getMemberEntity(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new ResourceNotFoundException(MEMBER_NOT_FOUND));
-    }
-
-    public void memberEmailUpdate(Member member, String email) {
-        if (!Objects.equals(member.getEmail(), email)) {
-            member.changeEmail(email);
-        }
     }
 }
