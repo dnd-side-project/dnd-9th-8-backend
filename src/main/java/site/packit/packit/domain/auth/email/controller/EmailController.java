@@ -2,11 +2,9 @@ package site.packit.packit.domain.auth.email.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import site.packit.packit.domain.auth.email.EmailAuthenticationRequest;
 import site.packit.packit.domain.auth.email.service.EmailService;
 import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.global.response.success.SuccessApiResponse;
@@ -33,9 +31,9 @@ public class EmailController {
         );
     }
 
-    @GetMapping("/api/email-authentication")
+    @PostMapping("/api/email-authentication")
     public ResponseEntity<SuccessApiResponse> authenticationCode(
-            String code
+            @RequestBody String code
     ) {
 
         emailService.verifyAuthenticationCode(code);
