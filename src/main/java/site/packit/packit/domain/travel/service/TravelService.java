@@ -11,6 +11,7 @@ import site.packit.packit.domain.member.entity.Member;
 import site.packit.packit.domain.member.repository.MemberRepository;
 import site.packit.packit.domain.storage.entity.Storage;
 import site.packit.packit.domain.storage.repository.StorageRepository;
+import site.packit.packit.domain.travel.constant.DestinationType;
 import site.packit.packit.domain.travel.dto.*;
 import site.packit.packit.domain.travel.entity.Travel;
 import site.packit.packit.domain.travel.repository.TravelRepository;
@@ -67,8 +68,16 @@ public class TravelService {
                 .build();
 
         travelRepository.save(createTravel);
+
+        if (createTravelRequest.destinationType() == DestinationType.DOMESTIC) {
+            createDomesticDefaultChecklistsAndItems(createTravel);
+        } else if (createTravelRequest.destinationType() == DestinationType.OVERSEAS) {
+            createOverseasDefaultChecklistsAndItems(createTravel);
+        }
         return createTravel.getId();
     }
+
+
 
     /**
      * 여행 수정
@@ -308,6 +317,297 @@ public class TravelService {
         }
 
         return checkListDtoList;
+    }
+
+
+    /**
+     * 새로운 여행 생성 - 기본 템플릿 생성
+     */
+    private void createDomesticDefaultChecklistsAndItems(Travel travel){
+        CheckList essentialPacking = CheckList.builder()
+                .title("필수 짐싸기")
+                .listOrder(1)
+                .travel(travel)
+                .essential(true)
+                .build();
+        checkListRepository.save(essentialPacking);
+
+        Item itemPacking1 = Item.builder()
+                .title("카드 및 지갑")
+                .listOrder(1)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking1);
+
+        Item itemPacking2 = Item.builder()
+                .title("충전기 및 보조배터리")
+                .listOrder(2)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking2);
+
+        Item itemPacking3 = Item.builder()
+                .title("상의, 하의")
+                .listOrder(3)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking3);
+
+        Item itemPacking4 = Item.builder()
+                .title("속옷 및 양말")
+                .listOrder(4)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking4);
+
+        Item itemPacking5 = Item.builder()
+                .title("우천 용품")
+                .listOrder(5)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking5);
+
+        Item itemPacking6 = Item.builder()
+                .title("세안 용품")
+                .listOrder(6)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking6);
+
+        Item itemPacking7 = Item.builder()
+                .title("개인 위생 용품")
+                .listOrder(7)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking7);
+
+        CheckList essentialTodo = CheckList.builder()
+                .title("필수 할 일")
+                .listOrder(2)
+                .travel(travel)
+                .essential(true)
+                .build();
+        checkListRepository.save(essentialTodo);
+
+        Item itemTodo1 = Item.builder()
+                .title("이동 수단 예매")
+                .listOrder(1)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo1);
+
+        Item itemTodo2 = Item.builder()
+                .title("숙소 예약")
+                .listOrder(2)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo2);
+
+        Item itemTodo3 = Item.builder()
+                .title("숙소 비품 확인")
+                .listOrder(3)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo3);
+
+        Item itemTodo4 = Item.builder()
+                .title("여행 경로 확인")
+                .listOrder(4)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo4);
+
+        Item itemTodo5 = Item.builder()
+                .title("방문 장소 예약")
+                .listOrder(5)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo5);
+
+        Item itemTodo6 = Item.builder()
+                .title("여행지 날씨 확인")
+                .listOrder(6)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo6);
+
+    }
+
+    private void createOverseasDefaultChecklistsAndItems(Travel travel){
+
+        CheckList essentialPacking = CheckList.builder()
+                .title("필수 짐싸기")
+                .listOrder(1)
+                .travel(travel)
+                .essential(true)
+                .build();
+        checkListRepository.save(essentialPacking);
+
+        Item itemPacking1 = Item.builder()
+                .title("여권, 신분증, 티켓")
+                .listOrder(1)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking1);
+
+        Item itemPacking2 = Item.builder()
+                .title("현지 화폐, 카드 및 지갑")
+                .listOrder(2)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking2);
+
+        Item itemPacking3 = Item.builder()
+                .title("구비 서류")
+                .listOrder(3)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking3);
+
+        Item itemPacking4 = Item.builder()
+                .title("충전기 및 보조배터리")
+                .listOrder(4)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking4);
+
+        Item itemPacking5 = Item.builder()
+                .title("상의, 하의")
+                .listOrder(5)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking5);
+
+        Item itemPacking6 = Item.builder()
+                .title("상비약, 기타 의약품")
+                .listOrder(6)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking6);
+
+        Item itemPacking7 = Item.builder()
+                .title("변압기")
+                .listOrder(7)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking7);
+
+        Item itemPacking8 = Item.builder()
+                .title("우천 용품")
+                .listOrder(8)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking8);
+
+        Item itemPacking9 = Item.builder()
+                .title("세안 용품")
+                .listOrder(9)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking9);
+
+        Item itemPacking10 = Item.builder()
+                .title("개인 위생 용품")
+                .listOrder(10)
+                .isChecked(false)
+                .checkList(essentialPacking)
+                .build();
+        itemRepository.save(itemPacking10);
+
+        CheckList essentialTodo = CheckList.builder()
+                .title("필수 할 일")
+                .listOrder(2)
+                .travel(travel)
+                .essential(true)
+                .build();
+        checkListRepository.save(essentialTodo);
+
+        Item itemTodo1 = Item.builder()
+                .title("여권 일자 확인 및 갱신")
+                .listOrder(1)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo1);
+
+        Item itemTodo2 = Item.builder()
+                .title("비행기 티켓 예매")
+                .listOrder(2)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo2);
+
+        Item itemTodo3 = Item.builder()
+                .title("비행기 반입 수화물 확인")
+                .listOrder(3)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo3);
+
+        Item itemTodo4 = Item.builder()
+                .title("숙소 예약")
+                .listOrder(4)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo4);
+
+        Item itemTodo5 = Item.builder()
+                .title("숙소 비품 확인")
+                .listOrder(5)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo5);
+
+        Item itemTodo6 = Item.builder()
+                .title("환전")
+                .listOrder(6)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo6);
+
+        Item itemTodo7 = Item.builder()
+                .title("여행지 날씨 확인")
+                .listOrder(7)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo7);
+
+        Item itemTodo8 = Item.builder()
+                .title("비자 및 구비서류 확인")
+                .listOrder(8)
+                .isChecked(false)
+                .checkList(essentialTodo)
+                .build();
+        itemRepository.save(itemTodo8);
+
     }
 
 }
