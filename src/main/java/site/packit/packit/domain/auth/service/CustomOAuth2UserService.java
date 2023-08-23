@@ -1,6 +1,7 @@
 package site.packit.packit.domain.auth.service;
 
 import jakarta.servlet.ServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,7 +35,8 @@ public class CustomOAuth2UserService
     private final MemberService memberService;
     private final ServletRequest request;
 
-    private static final String DEFAULT_PROFILE_IMAGE_URL = "https://dnd--pack-it.s3.ap-northeast-2.amazonaws.com/profile-images/1.svg";
+    @Value("${app.default-profile-image}")
+    private String DEFAULT_PROFILE_IMAGE_URL;
 
     public CustomOAuth2UserService(
             MemberRepository memberRepository,
