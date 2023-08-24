@@ -162,8 +162,8 @@ public class EmailServiceImpl
     }
 
     private void checkExpiredCode(LocalDateTime codeCreateTime) {
-        long betweenMinute = ChronoUnit.SECONDS.between(codeCreateTime, LocalDateTime.now());
-        if (betweenMinute > 600) {
+        long betweenMinutes = ChronoUnit.MINUTES.between(codeCreateTime, LocalDateTime.now());
+        if (betweenMinutes > 1440) {
             throw new EmailAuthenticationException(EXPIRED_AUTHENTICATION_CODE);
         }
     }
