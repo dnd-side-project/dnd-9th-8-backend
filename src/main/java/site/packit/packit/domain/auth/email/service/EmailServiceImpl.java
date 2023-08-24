@@ -4,6 +4,7 @@ import jakarta.mail.Message.RecipientType;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,8 @@ public class EmailServiceImpl
         implements EmailService {
 
     // TODO : 도메인 & SSL 연결 후 변경
-    private static final String EMAIL_AUTHENTICATION_URL = "http://localhost:8080/api/email-authentication?code=";
+    @Value("${app.email-authentication-url}")
+    private String EMAIL_AUTHENTICATION_URL;
 
     private final JavaMailSender emailSender;
     private final EmailAuthenticationCodeRepository emailAuthenticationCodeRepository;
@@ -160,8 +162,8 @@ public class EmailServiceImpl
     }
 
     private void checkExpiredCode(LocalDateTime codeCreateTime) {
-        long betweenMinute = ChronoUnit.SECONDS.between(codeCreateTime, LocalDateTime.now());
-        if (betweenMinute > 600) {
+        long betweenMinutes = ChronoUnit.MINUTES.between(codeCreateTime, LocalDateTime.now());
+        if (betweenMinutes > 1440) {
             throw new EmailAuthenticationException(EXPIRED_AUTHENTICATION_CODE);
         }
     }

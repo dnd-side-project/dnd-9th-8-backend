@@ -51,7 +51,7 @@ public class SecurityConfig {
             ),
             Map.of(
                     "URL", "/api/email-authentication",
-                    "METHOD", GET.name()
+                    "METHOD", POST.name()
             ),
             Map.of(
                     "URL", "/api/check",
