@@ -27,13 +27,9 @@ public class TravelController {
      */
     @PostMapping(value="")
     public ResponseEntity<SingleSuccessApiResponse<Long>> createTravel(
-//            @RequestBody CreateTravelRequest createTravelRequest, @AuthenticationPrincipal CustomUserPrincipal principal
-            @RequestBody CreateTravelRequest createTravelRequest, @RequestParam Long memberId
-
+            @RequestBody CreateTravelRequest createTravelRequest, @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-//        Long travelId = travelService.createTravel(principal.getMemberId(), createTravelRequest);
-        Long travelId = travelService.createTravel(memberId, createTravelRequest);
-
+        Long travelId = travelService.createTravel(principal.getMemberId(), createTravelRequest);
 
         return ResponseEntity.ok(
                 SingleSuccessApiResponse.of(
