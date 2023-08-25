@@ -1,0 +1,109 @@
+server:
+  port:
+
+spring:
+  profiles:
+    default: dev
+
+  datasource:
+    url:
+    username:
+    password:
+    driver-class-name:
+
+  jpa:
+    hibernate.ddl-auto:
+    show-sql:
+    properties:
+      hibernate.format_sql:
+      hibernate.default_batch_fetch_size:
+    open-in-view:
+    defer-datasource-initialization:
+
+  sql.init.mode:
+
+  ### OAuth2 ###
+  security:
+    oauth2.client:
+      registration:
+        kakao:
+          clientId:
+          clientSecret:
+          clientAuthenticationMethod:
+          authorizationGrantType:
+          redirectUri:
+          scope:
+          clientName:
+        naver:
+          clientId:
+          clientSecret:
+          clientAuthenticationMethod:
+          authorizationGrantType:
+          redirectUri:
+          scope:
+          clientName:
+      provider:
+        kakao:
+          authorizationUri:
+          tokenUri:
+          userInfoUri:
+          userNameAttribute:
+        naver:
+          authorizationUri:
+          tokenUri:
+          userInfoUri:
+          userNameAttribute:
+
+### debugging log disable ###
+debug:
+
+### actuator enable ###
+management.endpoints.web.exposure.include:
+
+logging:
+  level:
+    site.packit.packit:
+    org.springframework.web.servlet:
+    org.hibernate.type.descriptor.sql.BasicBinder:
+
+cloud:
+  aws:
+    s3:
+      bucket:
+    credentials:
+      access-key:
+      secret-key:
+    region:
+      static:
+      auto:
+    stack:
+      auto:
+
+### Custom App Setting ###
+app:
+  ### JWT ###
+  jwt:
+    secret:
+      access-token-secret-key:
+      refresh-token-secret-key:
+    expiry:
+      access-token-expiry:
+      refresh-token-expiry:
+
+  ### Cookie ###
+  cookie:
+    oauth2-authorization-request-cookie-name:
+    redirect-uri-param-cookie-name:
+    refresh-token-cookie-name:
+    cookie-expire-seconds:
+
+  ### OAuth2 ###
+  oauth2:
+    authorized-redirect-uris:
+    cookie-max-age:
+
+  ### Default-Profile-Image
+  default-profile-image:
+
+  ### Email Authentication Link
+  email-authentication-url:
