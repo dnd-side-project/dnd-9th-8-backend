@@ -13,9 +13,11 @@ import site.packit.packit.domain.travel.repository.TravelRepository;
 import site.packit.packit.global.exception.ResourceNotFoundException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static site.packit.packit.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
+import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_EDIT;
 import static site.packit.packit.domain.travel.exception.TravelErrorCode.TRAVEL_NOT_FOUND;
 
 @Service
@@ -45,6 +47,10 @@ public class StorageService {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(()-> new ResourceNotFoundException(MEMBER_NOT_FOUND));
+
+        if(!Objects.equals(travel.getMember().getId(), memberId)){
+            throw new ResourceNotFoundException(TRAVEL_NOT_EDIT);
+        }
 
         Storage storage = storageRepository.findByMemberAndTravel(member, travel);
 
