@@ -152,9 +152,7 @@ public class TravelService {
     @Transactional(readOnly = true)
     public List<TravelListDto> getPastTravel(Long memberId) {
         LocalDateTime now = LocalDateTime.now();
-
-        List<Travel> pastTravels = travelRepository.findByEndDateBeforeAndMemberIdOrderByEndDateDesc(now, memberId);
-
+        List<Travel> pastTravels = travelRepository.findByStartDateBeforeAndMemberIdOrderByStartDateDesc(now, memberId);
         return pastTravels.stream()
                 .map(travel -> convertToDto(travel, isAddedToStorage(travel.getId(), memberId)))
                 .collect(Collectors.toList());
