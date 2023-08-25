@@ -6,24 +6,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import site.packit.packit.domain.auth.dto.EmailAuthenticationCodeRequest;
-import site.packit.packit.domain.auth.email.service.EmailService;
+import site.packit.packit.domain.auth.email.service.EmailAuthenticationService;
 import site.packit.packit.domain.auth.info.CustomUserPrincipal;
 import site.packit.packit.global.response.success.SuccessApiResponse;
 
 @RestController
 public class EmailController {
 
-    private final EmailService emailService;
+    private final EmailAuthenticationService emailAuthenticationService;
 
-    public EmailController(EmailService emailService) {
-        this.emailService = emailService;
+    public EmailController(EmailAuthenticationService emailAuthenticationService) {
+        this.emailAuthenticationService = emailAuthenticationService;
     }
 
     @PostMapping("/api/authentication-email")
     public ResponseEntity<SuccessApiResponse> getEmailAuthenticationCode(
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) throws Exception {
-        emailService.sendSimpleMessage(principal.getMemberId());
+        emailAuthenticationService.sendSimpleMessage(principal.getMemberId());
 
         return ResponseEntity.ok(
                 SuccessApiResponse.of(
@@ -37,7 +37,7 @@ public class EmailController {
             @RequestBody EmailAuthenticationCodeRequest request
     ) {
 
-        emailService.verifyAuthenticationCode(request.code());
+        emailAuthenticationService.verifyAuthenticationCode(request.code());
 
         return ResponseEntity.ok(
                 SuccessApiResponse.of("성공적으로 이메일이 인증되었습니다.")

@@ -1,6 +1,6 @@
 package site.packit.packit.domain.auth.email.service;
 
-public interface EmailService {
+public interface EmailAuthenticationService {
 
     void sendSimpleMessage(Long memberId) throws Exception;
 

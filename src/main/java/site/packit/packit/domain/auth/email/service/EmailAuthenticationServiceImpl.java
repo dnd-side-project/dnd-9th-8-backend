@@ -26,8 +26,8 @@ import static site.packit.packit.domain.member.exception.MemberErrorCode.MEMBER_
 
 @Slf4j
 @Service
-public class EmailServiceImpl
-        implements EmailService {
+public class EmailAuthenticationServiceImpl
+        implements EmailAuthenticationService {
 
     // TODO : 도메인 & SSL 연결 후 변경
     @Value("${app.email-authentication-url}")
@@ -37,7 +37,7 @@ public class EmailServiceImpl
     private final EmailAuthenticationCodeRepository emailAuthenticationCodeRepository;
     private final MemberRepository memberRepository;
 
-    public EmailServiceImpl(
+    public EmailAuthenticationServiceImpl(
             JavaMailSender emailSender,
             EmailAuthenticationCodeRepository emailAuthenticationCodeRepository,
             MemberRepository memberRepository
