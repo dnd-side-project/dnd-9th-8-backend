@@ -11,5 +11,7 @@ public interface TravelRepository
 
     List<Travel> findByStartDateAfterAndMemberIdOrderByStartDateAsc(LocalDateTime startDate, Long memberId);
     List<Travel> findByEndDateBeforeAndMemberIdOrderByEndDateDesc(LocalDateTime endDate, Long memberId);
+
+    List<Travel> findAllByStartDateAndMember_IsEmailAuthorized(LocalDateTime startDate, Boolean isEmailAuthorized);
     int countAllByMember_Id(Long memberId);
 }
