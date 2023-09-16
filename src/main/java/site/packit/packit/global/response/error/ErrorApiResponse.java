@@ -40,7 +40,7 @@ public class ErrorApiResponse {
         );
     }
 
-    public String convertObjectToJson() {
+    public String convertResponseToJson() {
         return new GsonUtil().toJson(this);
     }
 }

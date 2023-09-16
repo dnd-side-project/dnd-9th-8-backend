@@ -81,12 +81,11 @@ public class CustomOAuth2UserService
         );
 
         request.setAttribute("memberStatus", LoginMemberStatus.EXISTING_MEMBER);
-        // 최초 로그인일 경우 회원 등록
+
         Member member = memberRepository.findByPersonalId(oAuth2UserInfo.getId())
                 .orElseGet(() -> register(oAuth2UserInfo, authenticationProvider));
         Collection<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(member.getRole().toString()));
 
-        // 회원 가입 된 계정의 로그인 유형과 현재 로그인 한 유형이 일치한지 검증
         if (authenticationProvider != member.getAuthenticationProvider()) {
             throw new OAuth2ProviderMisMatchException(member.getAuthenticationProvider().toString());
         }
