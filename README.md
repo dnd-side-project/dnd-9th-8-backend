@@ -18,4 +18,5 @@ PACKIT(팩잇)은 빈틈없는 여행을 위해 돕는 여행 준비 체크리�
 ### 📁 종료된 여행 기록도 언제든 조회 가능
 지난 내 여행 계획은 물론 다른 사용자들의 지난 여행 계획도 언제든 조회할 수 있으며 새로운 여행 계획을 세울 때 레퍼런스로 참고할 수 있습니다.
 
-![Uploading image.png…]()
+
+<img width="1320" alt="pack-it" src="https://github.com/dnd-side-project/dnd-9th-8-backend/assets/104609807/98ab739f-d344-422b-904a-be0aa2b68a3c">
