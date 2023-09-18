@@ -11,7 +11,7 @@ public enum GlobalErrorCode
 
     INVALID_REQUEST_PARAMETER("GB-C-0001", BAD_REQUEST, "유효하지 않은 요청 파라미터입니다."),
     INVALID_REQUEST_METHOD("GB-C-0002", METHOD_NOT_ALLOWED, "유효하지 않은 요청 메서드입니다."),
-
+    NOT_EXISTENT_RESOURCE_PATH("GB-C-0003", NOT_FOUND, "존재하지 않는 자원 경로입니다."),
     SERVER_ERROR("GB-S-0001", INTERNAL_SERVER_ERROR, "Internal Server Error");
 
     private final String code;
