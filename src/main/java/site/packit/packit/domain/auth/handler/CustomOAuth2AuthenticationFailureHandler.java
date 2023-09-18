@@ -1,25 +1,26 @@
 package site.packit.packit.domain.auth.handler;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.stereotype.Component;
 import site.packit.packit.domain.auth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import site.packit.packit.global.util.CookieUtil;
+import site.packit.packit.global.exception.ErrorCode;
+import site.packit.packit.global.response.error.ErrorApiResponse;
 
 import java.io.IOException;
 
+import static site.packit.packit.domain.auth.exception.AuthErrorCode.INVALID_CREDENTIALS;
+
+@Slf4j
+@Component
 public class CustomOAuth2AuthenticationFailureHandler
-        extends SimpleUrlAuthenticationFailureHandler {
+        implements AuthenticationFailureHandler {
 
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
-
-    @Value("${app.cookie.redirect-uri-param-cookie-name}")
-    private String REDIRECT_URI_PARAM_COOKIE_NAME;
 
     public CustomOAuth2AuthenticationFailureHandler(
             OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository
@@ -33,19 +34,25 @@ public class CustomOAuth2AuthenticationFailureHandler
             HttpServletResponse response,
             AuthenticationException exception
     ) throws IOException, ServletException {
-        String targetUrl = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-                .map(Cookie::getValue)
-                .orElse(("/"));
-
-        exception.printStackTrace();
-
-        targetUrl = UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("error", exception.getLocalizedMessage())
-                .build()
-                .toUriString();
+        log.error("LoginFailureHandler.onAuthenticationFailure");
 
         authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
 
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        log.error("LoginFailureHandler.onAuthenticationFailure");
+        setResponse(
+                response,
+                INVALID_CREDENTIALS
+        );
+    }
+
+    private void setResponse(
+            HttpServletResponse response,
+            ErrorCode errorCode
+    ) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write(
+                ErrorApiResponse.of(errorCode).convertResponseToJson()
+        );
     }
 }
