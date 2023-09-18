@@ -1,5 +1,6 @@
 package site.packit.packit.global.security.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -50,6 +51,8 @@ public class SecurityConfig {
             )
     );
 
+    private static final String SESSION_COOKIE_NAME = "PIID";
+
     public SecurityConfig(
             OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository,
             OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService,
@@ -94,7 +97,7 @@ public class SecurityConfig {
                         .logoutUrl("/api/logout")
                         .invalidateHttpSession(true)
                         .logoutSuccessHandler(logoutSuccessHandler)
-                        .deleteCookies("JSESSIONID")
+                        .deleteCookies(SESSION_COOKIE_NAME)
                 );
 
         http
