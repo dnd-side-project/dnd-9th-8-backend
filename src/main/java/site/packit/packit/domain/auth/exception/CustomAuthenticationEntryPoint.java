@@ -11,7 +11,7 @@ import site.packit.packit.global.response.error.ErrorApiResponse;
 
 import java.io.IOException;
 
-import static site.packit.packit.domain.auth.exception.AuthErrorCode.INVALID_CREDENTIALS;
+import static site.packit.packit.domain.auth.exception.AuthErrorCode.REQUEST_AUTHENTICATION;
 
 @Slf4j
 public class CustomAuthenticationEntryPoint
@@ -26,7 +26,7 @@ public class CustomAuthenticationEntryPoint
 
         setResponse(
                 response,
-                INVALID_CREDENTIALS
+                REQUEST_AUTHENTICATION
         );
     }
 
